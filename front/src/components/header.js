@@ -17,10 +17,10 @@ const Header = () => {
             <div className="container-fluid">
                 {/* 로고 */}
                 <a className="navbar-brand" href="#">
-                    <img src="logo.png" alt="Logo" width="30" height="30" className="d-inline-block align-top" />
+                    <img src="logo.png" alt="Logo" width="15" height="15" className="d-inline-block align-top" />
                 </a>
                 {/* 프로젝트 이름 */}
-                <span className="navbar-text">MentalHub</span>
+                <span className="navbar-text fw-bold">MentalHub</span>
                 {/* 검색바 */}
                 <div className="d-flex mx-auto">
                     <form className="d-flex ms-auto">
