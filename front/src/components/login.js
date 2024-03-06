@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 /** 로그인 기능 컴포넌트입니다.
@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  * 3. useEffect를 통해 화면 랜더시의 변화 감지/다만 페이지가 바로 바뀌어버리기 때문에 login에서는 미사용
 */
 
-const Login=()=>{
+const LoginComponent=()=>{
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -39,9 +39,8 @@ const Login=()=>{
                     <button type="button" className="btn btn-secondary" onClick={() => window.location.href='/join'}>회원가입</button>
                 </div>
             </form>
-            
         </div>
     );
 }
 
-export default Login;
+export default LoginComponent;
