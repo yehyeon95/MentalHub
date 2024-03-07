@@ -1,0 +1,28 @@
+spring:
+  # H2 Setting Info (H2 Console? ???? ?? ???? ??)
+  h2:
+    console:
+      enabled: true  # H2 Console? ???? ?? (H2 Console? H2 Database? UI? ????? ??)
+      path: /h2-console  # H2 Console? Path
+  # Database Setting Info (Database? H2? ???? ?? H2?? ?? ??)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/security?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root  # H2 ?? ? ??? username ?? (??? ??? ??)
+    password: 2n311975#!@ # H2 ?? ? ??? password ?? (??? ??? ??)
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: create-drop     # DB ??? ?? (none, create, create-drop, update, validate)
+    properties:
+      hibernate:
+        format_sql: true      # ?? ?? ?? (??)
+        show_sql: true        # ?? ?? ??
+#sever:
+  #servlet:
+    #context-path: /api/v1
+
+
+
+
