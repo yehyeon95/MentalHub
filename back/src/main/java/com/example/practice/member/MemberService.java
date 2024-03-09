@@ -3,6 +3,7 @@ package com.example.practice.member;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.memberDto.MemberPatchDto;
+import com.example.practice.member.memberDto.MemberResponseDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,16 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberMapper memberMapper;
     private final EntityManager em;
     public MemberService(MemberRepository memberRepository,
                          BCryptPasswordEncoder bCryptPasswordEncoder,
-                         EntityManager em){
+                         EntityManager em,
+                         MemberMapper memberMapper){
         this.memberRepository = memberRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.em = em;
+        this.memberMapper = memberMapper;
     }
 
     public Member createMember(Member member){
@@ -47,6 +51,30 @@ public class MemberService {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
 
         return memberRepository.save(member);
+    }
+
+    public MemberResponseDto getMember(long memberId){
+        Optional<Member> member = memberRepository.findByMemberId(memberId);
+        Member member1 = member.get();
+
+        MemberResponseDto result = memberMapper.MemberToMemberResponseDto(member1);
+
+        return result;
+    }
+
+    public void deleteMember(long memberId) {
+        Member findMember = findVerifiedMember(memberId);
+
+        memberRepository.delete(findMember);
+    }
+
+    public Member findVerifiedMember(long memberId) {
+        Optional<Member> optionalMember =
+                memberRepository.findByMemberId(memberId);
+        Member findMember =
+                optionalMember.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMember;
     }
 
     private void verifyEmail(String email){
@@ -76,5 +104,43 @@ public class MemberService {
         return result;
     }
 
+    public boolean checkPassword(long memberId, String password){
+        Member member = findVerifiedMember(memberId);
+        String findPassword = member.getPassword();
+
+        boolean matches = bCryptPasswordEncoder.matches(password, findPassword);
+        boolean result = false;
+
+        if (matches == true){
+            result = true;
+        }
+
+        else if(matches != true){
+            result = false;
+        }
+
+        return result;
+    }
+
+    public boolean checkRole(long memberId){
+        Member member = findVerifiedMember(memberId);
+        String memberRole = member.getRole();
+
+        boolean result;
+        if(memberRole=="ADMIN"){
+            result = true;
+        }
+        else {
+            result = false;
+        }
+        return result;
+    }
+
+    public Member changeRole(long memberId){
+        Member member = em.find(Member.class, memberId);
+        member.setRole("NORMAL");
+
+        return memberRepository.save(member);
+    }
 
 }

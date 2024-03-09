@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,6 +28,11 @@ public class Member {
     @Column(nullable = false, updatable = true, unique = false, name = "password")
     private String password;
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false, unique = false, name = "created_at")
+    private LocalDateTime created_at;
+
+    @Column(nullable = false, updatable = true, unique = false, name = "role")
     private String role;
 
     public Member(String email, String nickname, String password){

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class MemberPostDto {
     @NotBlank
     @Pattern(regexp = "^([a-zA-Z0-9@.]{8,50})$")
