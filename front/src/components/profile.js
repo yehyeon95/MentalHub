@@ -1,10 +1,22 @@
+import { fetchUserDelete } from "../util/fetchUser";
+import { useNavigate } from "react-router-dom";
 function Profile(){
+
+    const navigate = useNavigate();
 
     function handleLogout(){
         sessionStorage.clear();
     }
 
     function handleDelete(){
+        console.log('회원정보삭제')
+        userDelete()
+    }
+
+    const userDelete=()=>{
+        fetchUserDelete().then((res)=>{
+            navigate('/')
+        })
         console.log('회원정보삭제')
     }
 

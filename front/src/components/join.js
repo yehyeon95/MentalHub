@@ -1,6 +1,9 @@
 import {useState} from 'react';
-
+import {useNavigate} from 'react-router-dom'
+import { fetchUserJoin } from '../util/fetchUser';
 function JoinComponent(){
+
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -11,7 +14,6 @@ function JoinComponent(){
     const [errorEmail, setErrorEmail] = useState(true)
     const [errorPassword, setErrorPassword] = useState(true)
     const [errorUserName, setErrorUserName] = useState(true)
-    const [isValidation, setIsValidation] = useState(false)
 
     const handleEmail=(e)=>{
         setEmail(e.target.value)
@@ -19,8 +21,6 @@ function JoinComponent(){
 
     const handlePassword=(e)=>{
         setPassword(e.target.value)
-        //console.log(password)
-        //setErrorPassword(false)
     }
 
     const handlePasswordMatch=(e)=>{
@@ -92,12 +92,31 @@ function JoinComponent(){
 
         if(validation()) {
             console.log('제출준비완료');
-            onUpLoad();
+            // front 단에서의 유효성검사(오류 최소화를 위해)
+            onJoin();
         }
     }
 
-    const onUpLoad = async (callback) => {
-        // server와 통신하하는 곳 추후 작성
+    const onJoin = async(callback) => {
+        const formData = new FormData();
+        formData.append('email', email)
+        formData.append('password', password)
+        formData.append('nickname', userName)
+
+        for (const entry of formData.entries()) {
+            console.log(entry[0], entry[1]);
+        }
+        // console.log("formData :"+formData)
+        // console.log(formData)
+
+        const goLogin=()=>{
+            navigate('/login')
+        }
+
+        let path = await fetchUserJoin(formData).then((data)=>{
+            console.log(data);
+            if(data.status === 201) goLogin();
+        })
     }
 
     return (
