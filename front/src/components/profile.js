@@ -1,11 +1,20 @@
-import { fetchUserDelete } from "../util/fetchUser";
-import { useNavigate } from "react-router-dom";
+import { fetchUserDelete, fetchUserInfo } from "../util/fetchUser";
+import { useNavigate, useLocation } from "react-router-dom";
+import {useEffect} from 'react'
 function Profile(){
+
+    const location = useLocation();
+    useEffect(()=>{
+        console.log('시작점')
+        userGetInfo()
+
+    },[location])
 
     const navigate = useNavigate();
 
     function handleLogout(){
         sessionStorage.clear();
+        navigate('/')
     }
 
     function handleDelete(){
@@ -20,6 +29,14 @@ function Profile(){
         console.log('회원정보삭제')
     }
 
+    const userGetInfo = () =>{
+        console.log('getInfo 함수 시작')
+        fetchUserInfo().then((res) =>{
+        console.log(res)
+        })
+    }
+
+
     return (
         <div className="container m-5 border p-3 d-flex flex-column justify-content-start align-items-center" style={{ height: '16vh' }}>
             <div className="p-2 mb-3 align-self-start font-bold" style={{ fontWeight: 'bold', fontSize:'25px' }}>
@@ -28,7 +45,10 @@ function Profile(){
             <div className="mb-3 d-flex justify-content-start align-self-start">
                 <ul className='list-unstyled d-flex justify-content-start' style={{ fontSize: '11px' }}>
                     <li className="p-2">
-                        <a href='/editProfile'>회원정보수정 </a>
+                        <a href='/editName'>닉네임변경 </a>
+                    </li>
+                    <li className="p-2">
+                        <a href='/editPassword'>비밀번호수정 </a>
                     </li>
                     <li className="p-2">
                         <p>관리자권한신청</p>

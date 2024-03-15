@@ -1,16 +1,45 @@
-import {useState} from 'react';
-
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom'
 
 const Header = () => {
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
+    const [searchText, setSearchText] = useState('')
+
+    useEffect(()=>{
+        checkLoginState();
+    })
+
+    const checkLoginState = () => {
+        if(sessionStorage.getItem('access_token')){
+            setIsLogin(true)
+        } else {
+            setIsLogin(false)
+        }
+    }
 
     const handleLogout =()=>{
+        sessionStorage.clear();
         setIsLogin(false)
     }
-    const testLogin = ()=>{
-        setIsLogin(true)
-    }
     
+    const handleLogin =()=>{
+        navigate('/login')
+    }
+
+    function handleSearch(e){
+        setSearchText(e.target.value);
+
+        sessionStorage.setItem('searchText', searchText)
+
+        if (e.key === 'Enter' && searchText) {
+            if (window.location.pathname === '/question') window.location.reload();
+            else {
+              navigator('/question');
+            }
+            setSearchText('');
+          }
+    }
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -41,7 +70,7 @@ const Header = () => {
                 <>
                 {/* 로그인 버튼 */}
                 {/* <button className="btn btn-primary me-2" onClick={() => window.location.href='/login'}>로그인</button> */}
-                <button className="btn btn-primary me-2" onClick={testLogin}>로그인</button>
+                <button className="btn btn-primary me-2" onClick={handleLogin}>로그인</button>
                 {/* 회원가입 버튼 */}
                 <button className="btn btn-secondary" onClick={() => window.location.href='/join'}>회원가입</button>
                 </>

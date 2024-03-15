@@ -98,22 +98,18 @@ function JoinComponent(){
     }
 
     const onJoin = async(callback) => {
-        const formData = new FormData();
-        formData.append('email', email)
-        formData.append('password', password)
-        formData.append('nickname', userName)
 
-        for (const entry of formData.entries()) {
-            console.log(entry[0], entry[1]);
-        }
-        // console.log("formData :"+formData)
-        // console.log(formData)
+        const data = {
+            email: email,
+            password: password,
+            nickname: userName
+        };
 
         const goLogin=()=>{
             navigate('/login')
         }
 
-        let path = await fetchUserJoin(formData).then((data)=>{
+        let path = await fetchUserJoin(JSON.stringify(data)).then((data)=>{
             console.log(data);
             if(data.status === 201) goLogin();
         })

@@ -65,19 +65,23 @@ const LoginComponent=()=>{
     }
 
     const onLogin = async(callback) => {
-        const formData = new FormData();
-        formData.append('email', email)
-        formData.append('password', password)
+        // const formData = new FormData();
+        // formData.append('email', email)
+        // formData.append('password', password)
 
-        for (const entry of formData.entries()){
-            console.log(entry[0], entry[1])
-        }
-        
+        // for (const entry of formData.entries()){
+        //     console.log(entry[0], entry[1])
+        // }
+        const data = {
+            email: email,
+            password: password,
+        };
+
         const goHome=()=>{
             navigate('/')
         }
 
-        let login = await fetchUserLogin(formData).then((data)=>{
+        let login = await fetchUserLogin(JSON.stringify(data)).then((data)=>{
             if(data.status===200){
                 goHome();
             }
