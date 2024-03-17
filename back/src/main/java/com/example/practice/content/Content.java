@@ -1,5 +1,7 @@
 package com.example.practice.content;
 
+import com.example.practice.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +22,10 @@ public class Content {
     @Column(name = "content_id")
     private long contentId;
 
-    @Column(name = "member_id")
-    private long memberId;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(length = 50, nullable = false, updatable = true, unique = false, name = "title")
     private String title;

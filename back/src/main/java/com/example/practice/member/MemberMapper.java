@@ -12,7 +12,7 @@ public class MemberMapper {
                 memberPostDto.getNickname(),
                 memberPostDto.getPassword());
     }
-    public MemberResponseDto MemberToMemberResponseDto(Member member){
+    public MemberResponseDto memberToMemberResponseDto(Member member){
         return new MemberResponseDto(
                 member.getMemberId(),
                 member.getEmail(),

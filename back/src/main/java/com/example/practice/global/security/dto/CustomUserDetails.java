@@ -7,10 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CustomUserDetails implements UserDetails {
-    private final Member member;
-    public CustomUserDetails(Member member){
-        this.member = member;
+public class CustomUserDetails extends Member implements UserDetails {
+
+    public CustomUserDetails(Member member) {
+        setMemberId(member.getMemberId());
+        setNickname(member.getNickname());
+        setEmail(member.getEmail());
+        setPassword(member.getPassword());
+        setRole(member.getRole());
     }
 
     @Override
@@ -20,20 +24,16 @@ public class CustomUserDetails implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return member.getRole();
+                return getRole();
             }
         });
         return collection;
     }
 
-    @Override
-    public String getPassword() {
-        return member.getPassword();
-    }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return getEmail();
     }
 
     @Override

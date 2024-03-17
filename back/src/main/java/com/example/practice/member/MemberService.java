@@ -2,13 +2,16 @@ package com.example.practice.member;
 
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
+import com.example.practice.member.memberDto.MemberInterface;
 import com.example.practice.member.memberDto.MemberPatchDto;
 import com.example.practice.member.memberDto.MemberResponseDto;
 import jakarta.persistence.EntityManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -26,6 +29,13 @@ public class MemberService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.em = em;
         this.memberMapper = memberMapper;
+    }
+
+    public long extractMemberId(Authentication authentication){
+        Object principal = authentication.getPrincipal();
+        Member user = (Member) principal;
+        long memberId = user.getMemberId();
+        return memberId;
     }
 
     public Member createMember(Member member){
@@ -57,9 +67,14 @@ public class MemberService {
         Optional<Member> member = memberRepository.findByMemberId(memberId);
         Member member1 = member.get();
 
-        MemberResponseDto result = memberMapper.MemberToMemberResponseDto(member1);
+        MemberResponseDto result = memberMapper.memberToMemberResponseDto(member1);
 
         return result;
+    }
+    public List<MemberInterface> getAllMembers(){
+        List<MemberInterface> members = memberRepository.findAllWithout();
+
+        return members;
     }
 
     public void deleteMember(long memberId) {
