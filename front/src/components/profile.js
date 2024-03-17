@@ -4,11 +4,12 @@ import {useEffect} from 'react'
 function Profile(){
 
     const location = useLocation();
-    useEffect(()=>{
-        console.log('시작점')
-        userGetInfo()
 
-    },[location])
+    // useEffect(()=>{
+    //     console.log('시작점')
+    //     userGetInfo()
+
+    // },[location])
 
     const navigate = useNavigate();
 
@@ -29,12 +30,12 @@ function Profile(){
         console.log('회원정보삭제')
     }
 
-    const userGetInfo = () =>{
-        console.log('getInfo 함수 시작')
-        fetchUserInfo().then((res) =>{
-        console.log(res)
-        })
-    }
+    // const userGetInfo = () =>{
+    //     console.log('getInfo 함수 시작')
+    //     fetchUserInfo().then((res) =>{
+    //     console.log(res)
+    //     })
+    // }
 
 
     return (

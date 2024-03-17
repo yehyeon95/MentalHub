@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom'
-import { fetchUserJoin } from '../util/fetchUser';
+import { fetchUserJoin , fetchDuplicationEmail, fetchDuplicationNickName} from '../util/fetchUser';
 function JoinComponent(){
 
     const navigate = useNavigate();
@@ -14,6 +14,9 @@ function JoinComponent(){
     const [errorEmail, setErrorEmail] = useState(true)
     const [errorPassword, setErrorPassword] = useState(true)
     const [errorUserName, setErrorUserName] = useState(true)
+    const [duplicationEmail, setDuplicationEmail] = useState(false)
+    const [duplicationUserName, setDuplicationUserName] = useState(false)
+    const [validationButton, setValidationButton] = useState(false)
 
     const handleEmail=(e)=>{
         setEmail(e.target.value)
@@ -65,25 +68,39 @@ function JoinComponent(){
     }
 
     function validation(){
-        checkEmail()
-        ? console.log('Email 유효')
-        : console.log('Email 유효하지않음')
-        checkPassword()
-        ? console.log('Password 유효')
-        : console.log('Password 유효하지않음')
-        checkUserName()
-        ? console.log('userName 유효')
-        : console.log('userName 유효하지않음')
+        if(checkEmail() && !duplicationEmail){
+            console.log('Email 유효성 통과(중복검사포함)')
+        } else {
+            console.log('Email 유효성 통과 실패')
+            return false
+        }
+
+
+        if(checkPassword()){
+            console.log('password 유효성 통과')
+        } else {
+            console.log('password 유효성 통과 실패')
+            return false
+        }
+
+        if(checkUserName() && !duplicationUserName){
+            console.log('닉네임 유효성 통과(중복검사포함)')
+        } else {
+            console.log('닉네임 유효성 통과 실패')
+            return false
+        }
 
         console.log('checkEmail :'+errorEmail)
         console.log('checkPassword :'+errorPassword)
         console.log('checkUserName : ' + errorUserName)
 
-        if (checkEmail() && checkPassword() && checkUserName){
+        if (checkEmail() && checkPassword() && checkUserName && !duplicationEmail && !duplicationUserName){
             console.log(email + '' + password + '' + confirmPassword + '' + userName)
             console.log('join ready')
+            setValidationButton(true)
             return true
         }
+        setValidationButton(false)
         return false;
     }
 
@@ -111,7 +128,36 @@ function JoinComponent(){
 
         let path = await fetchUserJoin(JSON.stringify(data)).then((data)=>{
             console.log(data);
-            if(data.status === 201) goLogin();
+            if(data.status === 201)
+            goLogin();
+        })
+    }
+
+    const handleEmailDuplicationCheck = async(callback) => {
+        const data = {
+            email: email
+        };
+
+        let path = await fetchDuplicationEmail(JSON.stringify(data)).then((data)=>{
+            console.log(data);
+            if(data===true) {
+                setDuplicationEmail(true)
+                console.log('이메일 중복 검사 통과')
+            }
+        })
+    }
+
+    const handleUserNameDuplicationCheck = async(callback) => {
+        const data = {
+            email: email
+        };
+
+        let path = await fetchDuplicationNickName(JSON.stringify(data)).then((data)=>{
+            console.log(data);
+            if(data===true) {
+                setDuplicationUserName(true)
+                console.log('이메일 중복 검사 통과')
+            }
         })
     }
 
@@ -122,6 +168,7 @@ function JoinComponent(){
                 <div className="mb-3">
                     <input type="email" onChange={handleEmail}id="email" name="userId" className="form-control" placeholder="* 이메일"></input>
                     {errorEmail && <p className="text-danger">Email 형식으로 작성해주세요</p>}
+                    <button type="button" onClick={handleEmailDuplicationCheck} className="btn btn-secondary mb-2">이메일 중복검사</button>
                 </div>
                 <div className="mb-3">
                     <input type="password" onChange={handlePassword} id="userPassword" name="userPassword" className="form-control" placeholder="*비밀번호를 입력하세요"></input>
@@ -134,10 +181,11 @@ function JoinComponent(){
                 <div className="mb-3">
                     <input type="text" id="userName" onChange={handleUserName} name="userName" className="form-control" placeholder="* 닉네임"></input>
                     {errorUserName && <p className="text-danger">닉네임을 작성해주세요</p>}
+                    <button type="button" onClick={handleUserNameDuplicationCheck} className="btn btn-secondary mb-2">닉네임 중복검사</button>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
                     {/* <button type="submit" className="btn btn-primary" onClick={() => window.location.href='/'}>회원가입</button> */}
-                    <button type="submit" className="btn btn-primary">회원가입</button>
+                    <button type="submit" className="btn btn-primary" disabled={!validationButton}>회원가입</button>
                 </div>
             </form>
         </div>

@@ -9,11 +9,13 @@ export const fetchUserJoin  = async(data) => {
     })
         .then((res)=>{
             if(!res.ok){
-                if(res.status===500) console.log('이미 존재하는 이메일입니다.')
+                if(res.status===500)
+                console.log('이미 존재하는 이메일입니다.')
                 throw Error ('could not fetch the data for that resource');
             }
             if(res.status === 200)
                 console.log('회원가입이 성공했습니다.')
+                alert('회원가입에 성공했습니다. 로그인해주세요')
             return res;
         })
         .catch((error) => {
@@ -131,5 +133,53 @@ export const fetchUserInfo=async(data)=>{
     })
     .catch((err)=>{
         throw Error(err.message);
+    })
+}
+
+/**
+ * 이메일중복검사
+ */
+
+export const fetchDuplicationEmail=async(data)=>{
+    return fetch('/member/duplication/email',{
+        method:'POST',
+        headers: {'Content-Type':'application/json;charset=UTF-8'},
+        body:data,
+    })
+    .then((res)=>{
+        if(!res.ok){
+            throw Error('could not fetch the data for that resource')
+        }
+        if(res.status===200){
+            console.log('이메일 중복 검사 통과')
+        }
+        return res
+    })
+    .catch((err)=>{
+        console.log(err.message)
+    })
+}
+
+/**
+ * 닉네임중복검사
+ */
+
+export const fetchDuplicationNickName=async(data)=>{
+    return fetch('/member/duplication/nickname',{
+        method:'POST',
+        headers: {'Content-Type':'application/json;charset=UTF-8'},
+        body:data,
+    })
+    .then((res)=>{
+        if(!res.ok){
+            throw Error('could not fetch the data for that resource')
+        }
+        if(res.status===200){
+            console.log('이메일 중복 검사 통과')
+        }
+        return res
+    })
+    .catch((err)=>{
+        console.log(err.message)
     })
 }
