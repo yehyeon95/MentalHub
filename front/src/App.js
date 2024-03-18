@@ -7,6 +7,7 @@ import EditProfile from './pages/editProfile'
 import EditName from './pages/editName';
 import EditPassword from './pages/editPassword';
 import MyPage from './pages/myPage';
+import Board from './pages/board';
 
 //App.js 는 index.js에서 로드하는 파일로 각 컴포넌트에 대한 루트 즉 라우팅을 관리합니다.
 function App () {
@@ -14,7 +15,7 @@ function App () {
         <BrowserRouter>
             <Header />
             <Routes>
-                {/* <Route path="/" element={<Home />} /> */}
+                <Route path="/" element={<Board />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/join" element={<Join />} />
                 <Route path="/editName" element={<EditName />} />
