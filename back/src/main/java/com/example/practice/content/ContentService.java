@@ -9,6 +9,8 @@ import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.member.memberDto.MemberResponseDto;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +88,11 @@ public class ContentService {
         ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedcontent, savedcontent.getMember().getMemberId());
 
         return result;
+    }
+
+    public Page<Content> findPageContent(String type, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return contentRepository.findAllByTypeOrderByContentIdDesc(type, pageRequest);
     }
 
     public void deleteContent(long contentId, long memberId){

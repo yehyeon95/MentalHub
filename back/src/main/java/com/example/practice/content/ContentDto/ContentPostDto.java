@@ -8,14 +8,14 @@ import lombok.Getter;
 @Getter
 public class ContentPostDto {
 
-    @NotBlank
+
     private String title;
-    @NotBlank
+
     private String body;
-    @NotBlank
+
     private String font;
-    @NotBlank
+
     private long fontSize;
-    @NotBlank
+
     private String type;
 }

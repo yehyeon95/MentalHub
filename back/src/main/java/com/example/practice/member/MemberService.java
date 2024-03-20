@@ -46,7 +46,7 @@ public class MemberService {
         member1.setEmail(member.getEmail());
         member1.setNickname(member.getNickname());
         member1.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
-        member1.setRole("ADMIN");
+        member1.setRole("USER");
 
         Member savedMember = memberRepository.save(member1);
 

@@ -1,19 +1,24 @@
 package com.example.practice.content;
 
+import com.example.practice.content.ContentDto.ContentPageResponseDto;
 import com.example.practice.content.ContentDto.ContentPatchDto;
 import com.example.practice.content.ContentDto.ContentPostDto;
 import com.example.practice.content.ContentDto.ContentResponseDto;
+import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
 import com.example.practice.member.memberDto.MemberPostDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -58,11 +63,19 @@ public class ContentController {
 
     @GetMapping
     public ResponseEntity getAllContents(@RequestParam("page") @Positive int page,
-                                         @RequestParam("size") @Positive int size){
-        long response = 0;
+                                         @RequestParam("size") @Positive int size,
+                                         @RequestParam("type") String type){
 
+        Page<Content> contentPage = contentService.findPageContent(type,page-1, size);
+        PageInfo pageInfo = new PageInfo(page, size,(int)contentPage.getTotalElements(), contentPage.getTotalPages());
 
-        return new ResponseEntity(response, HttpStatus.OK);
+        List<Content> contents = contentPage.getContent();
+        List<ContentResponseDto> response =
+                contents.stream()
+                        .map(content-> contentMapper.ContentToContentResponseDto(content,content.getMember().getMemberId()))
+                        .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new ContentPageResponseDto(response, pageInfo), HttpStatus.OK);
     }
 
     @DeleteMapping("/{contentId}")

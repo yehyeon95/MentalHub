@@ -2,8 +2,10 @@ package com.example.practice.global.security.jwt;
 
 import com.example.practice.global.security.dto.CustomUserDetails;
 import com.example.practice.global.security.dto.LoginDto;
+import com.example.practice.global.security.dto.LoginResponseDto;
 import com.example.practice.member.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -60,15 +63,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         long memberId = member.getMemberId();
         System.out.println("mmmmmmmmmmmmmmm"+memberId);
 
+        Gson gson = new Gson();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(memberId, email, role, 60*60*24L);
+        String token = jwtUtil.createJwt(memberId, email, role, 60 * 60 * 2 * 1000L);
+
 
         response.addHeader("Authorization", "Bearer " + token);
+        try {
+            response.getWriter().println(gson.toJson(new LoginResponseDto(memberId)));
+        } catch (IOException e) {
+
+        }
 
     }
     //로그인 실패시 실행하는 메소드

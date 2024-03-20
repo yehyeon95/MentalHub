@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -15,11 +16,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "CONTENT")
 public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "content_id")
+    @Column(name = "content_id",nullable = false, updatable = false, unique = true)
     private long contentId;
 
     @JsonIgnore
@@ -43,11 +45,11 @@ public class Content {
     private String imageLink;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false, unique = false, name = "created_at")
+    @Column(nullable = true, updatable = false, unique = false, name = "created_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false, updatable = true, unique = false, name = "modified_at")
+    @Column(nullable = true, updatable = true, unique = false, name = "modified_at")
     private LocalDateTime modifiedAt;
 
     @Column(nullable = true, updatable = true, unique = false, name = "views")

@@ -25,7 +25,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     /*@Query("SELECT m.id, m.email, m.nickname, m.role, m.createdAt FROM Member m WHERE m.role = 'normal' ORDER BY m.createdAt DESC")
     Page<Member> findNormalMembersWithoutPassword(Pageable pageable);*/
 
-    @Query("SELECT m.id, m. FROM Member m WHERE m.role = 'ADMIN' ORDER BY m.created_at DESC")
+    @Query("SELECT m.id  FROM Member m WHERE m.role = 'ADMIN' ORDER BY m.created_at DESC")
     List<MemberInterface> findAllWithout();
 
 }
