@@ -1,10 +1,19 @@
+import { useNavigate } from "react-router-dom";
 const Footer = () => {
+
+    const navigate = useNavigate()
+
+    const handleClickLogo = () => {
+        navigate('/')
+    }
+
+
     return (
         <footer className="bg-light text-center text-lg-start">
             <div className="container d-flex justify-content-between align-items-center p-2">
                 <div className="fs-6">
-                    <img src="logo.png" alt="Logo" width="15" height="15" className="me-2" />
-                    <span className="fs-5 fw-bold me-auto">MentalHub</span>
+                    {/* <img src="logo.png" alt="Logo" width="15" height="15" className="me-2" /> */}
+                    <button className="fs-5 fw-bold me-auto" onClick={handleClickLogo}>MentalHub</button>
                 </div>
                 <div className="">
                     <ul className="list-unstyled mb-0">

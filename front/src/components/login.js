@@ -65,13 +65,6 @@ const LoginComponent=()=>{
     }
 
     const onLogin = async(callback) => {
-        // const formData = new FormData();
-        // formData.append('email', email)
-        // formData.append('password', password)
-
-        // for (const entry of formData.entries()){
-        //     console.log(entry[0], entry[1])
-        // }
         const data = {
             email: email,
             password: password,
@@ -82,7 +75,8 @@ const LoginComponent=()=>{
         }
 
         let login = await fetchUserLogin(JSON.stringify(data)).then((data)=>{
-            if(data.status===200){
+            console.log("data확인 :"+data.memberId)
+            if(data) {
                 goHome();
             }
         })

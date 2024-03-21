@@ -7,19 +7,19 @@ function Summary(){
     const [myAnswerCount, setMyAnswerCount] = useState(0)
     const [receivedRecommendation, setReceivedRecommendation] = useState(0)
 
-    useEffect(()=>{
-        getUserInfo()
-    },[])
+    // useEffect(()=>{
+    //     getUserInfo()
+    // },[])
 
-    const getUserInfo = async(callback) => {
-        console.log('summary에서 부르는지 확인')
-        let path = await fetchUserInfo().then((data)=>{
-            console.log(data)
-            // setMyPostCount(data.myPostCount)
-            // setMyAnswerCount(data.myAnswerCount)
-            // setReceivedRecommendation(data.myrecommendationCount)
-        })
-    }
+    // const getUserInfo = async(callback) => {
+    //     console.log('summary에서 부르는지 확인')
+    //     let path = await fetchUserInfo().then((data)=>{
+    //         console.log(data)
+    //     })
+    // }
+    // setMyPostCount(data.myPostCount)
+    // setMyAnswerCount(data.myAnswerCount)
+    // setReceivedRecommendation(data.myrecommendationCount)
 
     return (
         <div className='container justify-content-center'>

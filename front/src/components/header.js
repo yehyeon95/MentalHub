@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
+import { fetchUserLogOut } from '../util/fetchUser';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -19,12 +20,19 @@ const Header = () => {
     }
 
     const handleLogout =()=>{
-        sessionStorage.clear();
-        setIsLogin(false)
+        // fetchUserLogOut().then((res)=>{
+            sessionStorage.clear();
+            setIsLogin(false)
+            navigate('/')
+        // })
     }
     
     const handleLogin =()=>{
         navigate('/login')
+    }
+
+    const handleClickLogo = () => {
+        navigate('/')
     }
 
     function handleSearch(e){
@@ -35,21 +43,21 @@ const Header = () => {
         if (e.key === 'Enter' && searchText) {
             if (window.location.pathname === '/question') window.location.reload();
             else {
-              navigator('/question');
+                navigator('/question');
             }
             setSearchText('');
-          }
+        }
     }
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
                 {/* 로고 */}
-                <a className="navbar-brand" href="#">
+                {/* <a className="navbar-brand" href="#">
                     <img src="logo.png" alt="Logo" width="15" height="15" className="d-inline-block align-top" />
-                </a>
+                </a> */}
                 {/* 프로젝트 이름 */}
-                <span className="navbar-text fw-bold">MentalHub</span>
+                <button className="navbar-text fw-bold" onClick={handleClickLogo}>MentalHub</button>
                 {/* 검색바 */}
                 <div className="d-flex mx-auto">
                     <form className="d-flex ms-auto">

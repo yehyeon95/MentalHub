@@ -1,15 +1,16 @@
-import { fetchUserDelete, fetchUserInfo } from "../util/fetchUser";
-import { useNavigate, useLocation } from "react-router-dom";
-import {useEffect} from 'react'
+import { fetchUserDelete , fetchUserInfo } from "../util/fetchUser";
+import { useNavigate , useLocation } from "react-router-dom";
+import { useState , useEffect} from 'react'
 function Profile(){
 
     const location = useLocation();
+    const [userInfo, setUserInfo] = useState(null);
 
-    // useEffect(()=>{
-    //     console.log('시작점')
-    //     userGetInfo()
+    useEffect(()=>{
+        console.log('시작점')
+        getUserInfo()
 
-    // },[location])
+    },[location])
 
     const navigate = useNavigate();
 
@@ -30,18 +31,17 @@ function Profile(){
         console.log('회원정보삭제')
     }
 
-    // const userGetInfo = () =>{
-    //     console.log('getInfo 함수 시작')
-    //     fetchUserInfo().then((res) =>{
-    //     console.log(res)
-    //     })
-    // }
+    const getUserInfo = async(callback) => {
+        let path = await fetchUserInfo().then((data)=>{
+            setUserInfo(data)
+        })
+    }
 
 
     return (
         <div className="container m-5 border p-3 d-flex flex-column justify-content-start align-items-center" style={{ height: '16vh' }}>
             <div className="p-2 mb-3 align-self-start font-bold" style={{ fontWeight: 'bold', fontSize:'25px' }}>
-                userName
+                {userInfo && userInfo.nickname}
             </div>
             <div className="mb-3 d-flex justify-content-start align-self-start">
                 <ul className='list-unstyled d-flex justify-content-start' style={{ fontSize: '11px' }}>

@@ -32,24 +32,32 @@ export const fetchUserLogin = async(data) =>{
         headers : {'Content-Type':'application/json;charset=UTF-8'},
         body:data,
     })
-        .then((res)=>{
-            if(!res.ok){
-                if(res.status===401)
-                console.log('이메일 또는 패스워드가 틀렸습니다.')
-                throw Error('could not fetch the data for that resource')
-            }
-            if(res.status===200){
-                console.log('로그인 성공')
-                const accessToken = res.headers.get('Authorization');
-                const refreshToken = res.headers.get('refresh');
-                sessionStorage.setItem('access_token',accessToken)
-                sessionStorage.setItem('refresh_token',refreshToken)
-            }
-            return res
-        })
-        .catch((err)=>{
-            console.log(err.message)
-        })
+    .then((res)=>{
+        if(!res.ok){
+            if(res.status===401)
+            console.log('이메일 또는 패스워드가 틀렸습니다.')
+            throw Error('could not fetch the data for that resource')
+        }
+        if(res.status===200){
+            const accessToken = res.headers.get('Authorization');
+            const refreshToken = res.headers.get('refresh');
+            sessionStorage.setItem('access_token',accessToken)
+            sessionStorage.setItem('refresh_token',refreshToken)
+            console.log('로그인 성공')
+            return res.json(); //json 데이터로 파싱하여 반환
+
+        }
+    })
+    .then((data)=> {
+    const memberId = data.memberId
+    console.log(data)
+    console.log(memberId)
+    sessionStorage.setItem('memberId', memberId)
+    return data
+    })
+    .catch((err)=>{
+        console.log(err.message)
+    })
 };
 
 /**
@@ -107,41 +115,70 @@ export const fetchUserUpdate = async(data) => {
  * 회원정보조회
  */
 
-export const fetchUserInfo=async(data)=>{
+export const fetchUserInfo = async (data) => {
     console.log('getUserInfo 함수 진입')
-    return fetch('/members/4',{
+    return fetch('/members/somemember',{
         method:'GET',
         headers : {
             'content-type' :'application/json;charset=UTF-8',
-            authorization : sessionStorage.getItem('access_token')    }
+            authorization : sessionStorage.getItem('access_token'),
+            "ngrok-skip-browser-warning": "69420"
+        }
     })
     .then((res)=>{
         if(!res.ok){
             console.log('어디서 잘못된것인가')
             throw Error('유효하지 않은 요청입니다.');
         }
-        return res.json();
-    })
-    .then((res)=>{
         if(res.status===200){
             console.log('유정정보를 조회했습니다.')
-            return res;
-        } else {
-            throw Error('유저정보를 조회하지 못했습니다.')
+            return res.json();
         }
-        
+    })
+    .then((data)=>{
+        console.log(data.nickname)
+        console.log(data)
+        return data
+    })
+    .catch((err)=>{
+        throw Error(err.message);
+    })
+}
+/**
+ * 로그아웃
+ */
+export const fetchUserLogOut = async(data)=>{
+    return fetch('/member/logout',{
+        method:'DELETE',
+        headers:{
+            'content-type' :'application/json;charset=UTF-8',
+            authorization : sessionStorage.getItem('access_token')
+        }
+    })
+    .then((res)=>{
+        if(!res.ok){
+            console.log('로그아웃안됨')
+            throw Error('유효하지않은 요청입니다.')
+        }
+        if(res.status===200){
+            console.log('로그아웃성공')
+            console.log(res)
+            return res
+        }
     })
     .catch((err)=>{
         throw Error(err.message);
     })
 }
 
+
+
 /**
  * 이메일중복검사
  */
 
 export const fetchDuplicationEmail=async(data)=>{
-    return fetch('/member/duplication/email',{
+    return fetch('/members/duplicate/email',{
         method:'POST',
         headers: {'Content-Type':'application/json;charset=UTF-8'},
         body:data,
@@ -150,10 +187,12 @@ export const fetchDuplicationEmail=async(data)=>{
         if(!res.ok){
             throw Error('could not fetch the data for that resource')
         }
-        if(res.status===200){
-            console.log('이메일 중복 검사 통과')
-        }
-        return res
+        return res.json();
+    })
+    .then(data=>{
+            console.log(data)
+        return data
+
     })
     .catch((err)=>{
         console.log(err.message)
@@ -165,7 +204,7 @@ export const fetchDuplicationEmail=async(data)=>{
  */
 
 export const fetchDuplicationNickName=async(data)=>{
-    return fetch('/member/duplication/nickname',{
+    return fetch('/members/duplicate/nickname',{
         method:'POST',
         headers: {'Content-Type':'application/json;charset=UTF-8'},
         body:data,
@@ -174,10 +213,10 @@ export const fetchDuplicationNickName=async(data)=>{
         if(!res.ok){
             throw Error('could not fetch the data for that resource')
         }
-        if(res.status===200){
-            console.log('이메일 중복 검사 통과')
-        }
-        return res
+        return res.json();
+    })
+    .then((data)=>{
+        return data
     })
     .catch((err)=>{
         console.log(err.message)

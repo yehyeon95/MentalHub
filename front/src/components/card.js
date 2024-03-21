@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 const CardComponent = () => {
     return (
-        <div className="d-flex justify-content-center">
+        <div className="">
             <div className="container p-4 border text-md border-soGray-light">
                 <div className="row">
                     </div>
