@@ -5,6 +5,8 @@ import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.memberDto.MemberInterface;
 import com.example.practice.member.memberDto.MemberPatchDto;
 import com.example.practice.member.memberDto.MemberResponseDto;
+import com.example.practice.member.memberDto.duplicate.MemberNickname;
+import com.example.practice.member.memberDto.duplicate.MemberPassword;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,12 +55,18 @@ public class MemberService {
         return savedMember;
     }
 
-    public Member updateMember(MemberPatchDto memberPatchDto, long memberId){
+    public Member updateMemberNickname(MemberNickname memberNickname, long memberId){
         Member member = em.find(Member.class, memberId);
 
-        member.setEmail(memberPatchDto.getEmail());
-        member.setNickname(memberPatchDto.getNickname());
-        member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
+        member.setNickname(memberNickname.getNickname());
+
+        return memberRepository.save(member);
+    }
+
+    public Member updateMemberPassword(MemberPassword memberPassword, long memberId){
+        Member member = em.find(Member.class, memberId);
+
+        member.setPassword(bCryptPasswordEncoder.encode(memberPassword.getPassword()));
 
         return memberRepository.save(member);
     }
@@ -119,22 +127,15 @@ public class MemberService {
         return result;
     }
 
-    public boolean checkPassword(long memberId, String password){
+    public boolean checkPassword(long memberId, MemberPassword memberPassword){
         Member member = findVerifiedMember(memberId);
         String findPassword = member.getPassword();
 
+        String password = memberPassword.getPassword();
+
         boolean matches = bCryptPasswordEncoder.matches(password, findPassword);
-        boolean result = false;
 
-        if (matches == true){
-            result = true;
-        }
-
-        else if(matches != true){
-            result = false;
-        }
-
-        return result;
+        return matches;
     }
 
     public boolean checkRole(long memberId){

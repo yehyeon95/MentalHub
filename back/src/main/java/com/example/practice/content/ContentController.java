@@ -1,9 +1,7 @@
 package com.example.practice.content;
 
-import com.example.practice.content.ContentDto.ContentPageResponseDto;
-import com.example.practice.content.ContentDto.ContentPatchDto;
-import com.example.practice.content.ContentDto.ContentPostDto;
-import com.example.practice.content.ContentDto.ContentResponseDto;
+import com.example.practice.comment.Comment;
+import com.example.practice.content.ContentDto.*;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
 import com.example.practice.member.memberDto.MemberPostDto;
@@ -40,7 +38,7 @@ public class ContentController {
                                       Authentication authentication){
 
         Content content = contentService.createContent(authentication, contentPostDto);
-        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId());
+        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),0);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -49,7 +47,7 @@ public class ContentController {
     public ResponseEntity patchContent(@PathVariable("contentId") long contentId,
                                        @Valid @RequestBody ContentPatchDto contentPatchDto){
         Content content = contentService.updateContent(contentId, contentPatchDto);
-        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId());
+        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),contentService.getCommentsCount(contentId));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -57,8 +55,9 @@ public class ContentController {
     @GetMapping("/{contentId}")
     public ResponseEntity getContent(@PathVariable("contentId") long contentId){
         ContentResponseDto response = contentService.getContent(contentId);
+        List<Comment> findComments = contentService.findVerifyComments(contentId);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new ContentGetResponseDto(response, findComments), HttpStatus.OK);
     }
 
     @GetMapping
@@ -70,9 +69,10 @@ public class ContentController {
         PageInfo pageInfo = new PageInfo(page, size,(int)contentPage.getTotalElements(), contentPage.getTotalPages());
 
         List<Content> contents = contentPage.getContent();
+
         List<ContentResponseDto> response =
                 contents.stream()
-                        .map(content-> contentMapper.ContentToContentResponseDto(content,content.getMember().getMemberId()))
+                        .map(content-> contentMapper.ContentToContentResponseDto(content,content.getMember().getMemberId(),contentService.getCommentsCount(content.getContentId())))
                         .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ContentPageResponseDto(response, pageInfo), HttpStatus.OK);

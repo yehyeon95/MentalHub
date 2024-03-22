@@ -1,5 +1,7 @@
 package com.example.practice.content;
 
+import com.example.practice.comment.Comment;
+import com.example.practice.comment.CommentRepository;
 import com.example.practice.content.ContentDto.ContentPatchDto;
 import com.example.practice.content.ContentDto.ContentPostDto;
 import com.example.practice.content.ContentDto.ContentResponseDto;
@@ -15,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,15 +28,18 @@ public class ContentService {
     private final ContentRepository contentRepository;
     private final EntityManager em;
     private final MemberService memberService;
+    private final CommentRepository commentRepository;
 
     public ContentService(ContentMapper contentMapper,
                           ContentRepository contentRepository,
                           EntityManager em,
-                          MemberService memberService){
+                          MemberService memberService,
+                          CommentRepository commentRepository){
         this.contentMapper = contentMapper;
         this.contentRepository = contentRepository;
         this.em = em;
         this.memberService = memberService;
+        this.commentRepository = commentRepository;
     }
 
     public long extractMemberId(Authentication authentication){
@@ -85,7 +91,8 @@ public class ContentService {
 
         Content savedcontent = contentRepository.save(content);
 
-        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedcontent, savedcontent.getMember().getMemberId());
+        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedcontent, savedcontent.getMember().getMemberId(),
+                getCommentsCount(savedcontent.getContentId()));
 
         return result;
     }
@@ -104,6 +111,29 @@ public class ContentService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
         }
         else contentRepository.delete(content);
+    }
+
+    public Content findVerifiedContent(long contentId) {
+        Optional<Content> optionalContent =
+                contentRepository.findByContentId(contentId);
+        Content findContent =
+                optionalContent.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
+        return findContent;
+    }
+
+    public long getCommentsCount(long contentId){
+        Content content = findVerifiedContent(contentId);
+        long result = Long.valueOf(commentRepository.countAllByContent(content));
+
+        return result;
+    }
+
+    public List<Comment> findVerifyComments(long contentId){
+        Content content = findVerifiedContent(contentId);
+        List<Comment> findComments = commentRepository.findAllByContent(content);
+
+        return findComments;
     }
 
 

@@ -2,22 +2,19 @@ package com.example.practice.member;
 
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
-import com.example.practice.global.security.dto.CustomUserDetails;
 import com.example.practice.member.memberDto.*;
 import com.example.practice.member.memberDto.duplicate.MemberEmail;
 import com.example.practice.member.memberDto.duplicate.MemberNickname;
+import com.example.practice.member.memberDto.duplicate.MemberPassword;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -47,18 +44,24 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PatchMapping
-    public ResponseEntity patchMember(@Valid @RequestBody MemberPatchDto memberPatchDto,
+    @PatchMapping("/nickname")
+    public ResponseEntity patchMemberNickname(@Valid @RequestBody MemberNickname memberNickname,
                                       Authentication authentication){
 
-        //principal 모듈화
-        Object principal = authentication.getPrincipal();
-        Member user = (Member) principal;
-        long memberId = user.getMemberId();
+        long memberId = memberService.extractMemberId(authentication);
 
-        //인증인가 구현 후 수정요망
+        Member response = memberService.updateMemberNickname(memberNickname, memberId);
 
-        Member response = memberService.updateMember(memberPatchDto, memberId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity patchMemberPassword(@Valid @RequestBody MemberPassword memberPassword,
+                                      Authentication authentication){
+
+        long memberId = memberService.extractMemberId(authentication);
+
+        Member response = memberService.updateMemberPassword(memberPassword, memberId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -141,11 +144,11 @@ public class MemberController {
 
     //회원 삭제
     @DeleteMapping
-    public ResponseEntity deleteMember(@Valid @RequestBody MemberDeletePassword memberPassword,
+    public ResponseEntity deleteMember(@Valid @RequestBody MemberPassword memberPassword,
                                        Authentication authentication){
         long memberId = memberService.extractMemberId(authentication);
 
-        boolean passwordCorrect = memberService.checkPassword(memberId, memberPassword.getPassword());
+        boolean passwordCorrect = memberService.checkPassword(memberId, memberPassword);
 
         if(passwordCorrect==true){
             memberService.deleteMember(memberId);
@@ -153,6 +156,15 @@ public class MemberController {
         else throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_CORRECT);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/checkpassword")
+    public ResponseEntity verifyPassword(@Valid @RequestBody MemberPassword memberPassword,
+                                         Authentication authentication){
+        long memberId = memberService.extractMemberId(authentication);
+        boolean passwordCorrect = memberService.checkPassword(memberId, memberPassword);
+
+        return new ResponseEntity(passwordCorrect, HttpStatus.OK);
     }
 
 

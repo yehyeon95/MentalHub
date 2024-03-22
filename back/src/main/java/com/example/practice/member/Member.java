@@ -1,5 +1,6 @@
 package com.example.practice.member;
 
+import com.example.practice.comment.Comment;
 import com.example.practice.content.Content;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,8 +42,11 @@ public class Member {
     @Column(nullable = true, updatable = true, unique = false, name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Content> contents;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public Member(String email, String nickname, String password){
         this.email = email;

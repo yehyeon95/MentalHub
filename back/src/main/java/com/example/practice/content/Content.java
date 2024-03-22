@@ -1,5 +1,6 @@
 package com.example.practice.content;
 
+import com.example.practice.comment.Comment;
 import com.example.practice.member.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class Content {
     private long contentId;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -57,6 +59,9 @@ public class Content {
 
     @Column(nullable = false, updatable = true, unique = false, name = "type")
     private String type;
+
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public Content(String title, String body){
         this.title = title;
