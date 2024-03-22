@@ -58,7 +58,7 @@ public class ContentController {
         Content content = contentService.updateContent(contentId, contentPatchDto);
         ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),contentService.getCommentsCount(contentId));
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);//
     }
 
     @GetMapping("/{contentId}")
