@@ -4,12 +4,16 @@ import com.example.practice.comment.commentDto.CommentPostDto;
 import com.example.practice.content.Content;
 import com.example.practice.content.ContentDto.ContentPostDto;
 import com.example.practice.content.ContentService;
+import com.example.practice.global.exception.BusinessLogicException;
+import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,5 +55,13 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         return savedComment;
+    }
+    public Comment findVerifiedComment(long commentId) {
+        Optional<Comment> optionalComment =
+                commentRepository.findByCommentId(commentId);
+        Comment findComment =
+                optionalComment.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
+        return findComment;
     }
 }

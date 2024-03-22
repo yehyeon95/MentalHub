@@ -2,6 +2,7 @@ package com.example.practice.member;
 
 import com.example.practice.comment.Comment;
 import com.example.practice.content.Content;
+import com.example.practice.reply.Reply;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Reply> replies;
 
     public Member(String email, String nickname, String password){
         this.email = email;

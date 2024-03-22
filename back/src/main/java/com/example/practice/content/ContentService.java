@@ -97,6 +97,7 @@ public class ContentService {
         return result;
     }
 
+    //전체 게시글 출력
     public Page<Content> findPageContent(String type, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
         return contentRepository.findAllByTypeOrderByContentIdDesc(type, pageRequest);
@@ -122,13 +123,14 @@ public class ContentService {
         return findContent;
     }
 
+    //게시글의 댓글수 반환
     public long getCommentsCount(long contentId){
         Content content = findVerifiedContent(contentId);
         long result = Long.valueOf(commentRepository.countAllByContent(content));
 
         return result;
     }
-
+    //게시글의 댓글 리스트 반환
     public List<Comment> findVerifyComments(long contentId){
         Content content = findVerifiedContent(contentId);
         List<Comment> findComments = commentRepository.findAllByContent(content);

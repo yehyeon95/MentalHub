@@ -2,6 +2,7 @@ package com.example.practice.content;
 
 import com.example.practice.comment.Comment;
 import com.example.practice.member.Member;
+import com.example.practice.reply.Reply;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -62,6 +63,9 @@ public class Content {
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
+    private List<Reply> replies;
 
     public Content(String title, String body){
         this.title = title;

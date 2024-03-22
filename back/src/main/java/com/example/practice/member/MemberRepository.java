@@ -1,6 +1,9 @@
 package com.example.practice.member;
 
+import com.example.practice.content.Content;
 import com.example.practice.member.memberDto.MemberInterface;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,14 +21,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     //유저가 존재하는지 확인
     Boolean existsByEmail(String email);
-    /*
-    @Query("SELECT new Member(m.id, m.email, m.nickname, m.role, m.createdAt) FROM Member m WHERE m.role = 'normal' ORDER BY m.createdAt DESC")
-    Page<Member> findNormalMembersWithoutPassword(Pageable pageable);*/
 
-    /*@Query("SELECT m.id, m.email, m.nickname, m.role, m.createdAt FROM Member m WHERE m.role = 'normal' ORDER BY m.createdAt DESC")
-    Page<Member> findNormalMembersWithoutPassword(Pageable pageable);*/
+    Page<Member> findAllByRoleOrderByMemberIdDesc(String role, Pageable pageable);
 
-    @Query("SELECT m.id  FROM Member m WHERE m.role = 'ADMIN' ORDER BY m.created_at DESC")
+    @Query("SELECT m.id  FROM Member m WHERE m.role = 'USER' ORDER BY m.created_at DESC")
     List<MemberInterface> findAllWithout();
 
 }

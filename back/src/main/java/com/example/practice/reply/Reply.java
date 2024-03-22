@@ -1,8 +1,8 @@
-package com.example.practice.comment;
+package com.example.practice.reply;
 
+import com.example.practice.comment.Comment;
 import com.example.practice.content.Content;
 import com.example.practice.member.Member;
-import com.example.practice.reply.Reply;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,20 +12,18 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "COMMENT")
-public class Comment {
+@Table(name = "REPLY")
+public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private long commentId;
-
+    @Column(name = "reply_id")
+    private long replyId;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -36,11 +34,13 @@ public class Comment {
     @JoinColumn(name = "content_id")
     private Content content;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    private List<Reply> replies;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
     @Column(length = 500, nullable = false, updatable = true, unique = false, name = "comment_body")
-    private String commentBody;
+    private String replyBody;
 
     @CreatedDate
     @Column(updatable = true, unique = false, name = "created_at")
@@ -48,9 +48,7 @@ public class Comment {
 
     private long votes;
 
-    public Comment(String commentBody){
-        this.commentBody = commentBody;
+    public Reply(String replyBody){
+        this.replyBody = replyBody;
     }
-
-
 }

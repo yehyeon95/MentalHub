@@ -1,5 +1,9 @@
 package com.example.practice.member;
 
+import com.example.practice.content.Content;
+import com.example.practice.content.ContentDto.ContentPageResponseDto;
+import com.example.practice.content.ContentDto.ContentResponseDto;
+import com.example.practice.global.dto.PageInfo;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.memberDto.*;
@@ -7,7 +11,9 @@ import com.example.practice.member.memberDto.duplicate.MemberEmail;
 import com.example.practice.member.memberDto.duplicate.MemberNickname;
 import com.example.practice.member.memberDto.duplicate.MemberPassword;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -113,28 +120,27 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //관리자 페이지에서 회원 목록 10개씩 최신순으로 불러오기.
-
-    /*@GetMapping
-    public ResponseEntity getAllMembers(@RequestParam int page,
-                                        @RequestParam int size,
-                                        Authentication authentication){
-        long memberId = memberService.extractMemberId(authentication);
-
-        boolean checkRole = memberService.checkRole(memberId);
-
-        if(checkRole==false){
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ADMIN);
-        }
-        else{
-            PageRequest pageable = PageRequest.of(page, size);
-            //memberRepository.findNormalMembersWithoutPassword(pageable)
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-    }*/
+    //회원 목록 10개씩 최신순으로 불러오기. ADMIN 반영 이후 토큰 검증 과정 필요.
 
     @GetMapping
+    public ResponseEntity getAllMembers(@RequestParam("page") @Positive int page,
+                                         @RequestParam("size") @Positive int size,
+                                         @RequestParam("role") String role){
+
+        Page<Member> pageMembers = memberService.findPageMember(role,page-1, size);
+        PageInfo pageInfo = new PageInfo(page, size,(int)pageMembers.getTotalElements(), pageMembers.getTotalPages());
+
+        List<Member> members = pageMembers.getContent();
+
+        List<MemberResponseDto> response =
+                members.stream()
+                        .map(member-> memberMapper.memberToMemberResponseDto(member))
+                        .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new MemberPageResponseDto(response, pageInfo), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
     public ResponseEntity getAllMembers2(){
         List<MemberInterface> response = memberService.getAllMembers();
         log.info("response length = {}" , response.size());
@@ -158,6 +164,7 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    //비밀번호 확인
     @GetMapping("/checkpassword")
     public ResponseEntity verifyPassword(@Valid @RequestBody MemberPassword memberPassword,
                                          Authentication authentication){

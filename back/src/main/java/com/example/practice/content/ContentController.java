@@ -1,10 +1,13 @@
 package com.example.practice.content;
 
 import com.example.practice.comment.Comment;
+import com.example.practice.comment.CommentMapper;
+import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.content.ContentDto.*;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
 import com.example.practice.member.memberDto.MemberPostDto;
+import com.example.practice.reply.ReplyRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
@@ -26,12 +29,18 @@ public class ContentController {
 
     private final ContentMapper contentMapper;
     private final ContentService contentService;
+    private final CommentMapper commentMapper;
+    private final ReplyRepository replyRepository;
 
 
     public ContentController(ContentMapper contentMapper,
-                             ContentService contentService){
+                             ContentService contentService,
+                             ReplyRepository replyRepository,
+                             CommentMapper commentMapper){
         this.contentMapper = contentMapper;
         this.contentService = contentService;
+        this.replyRepository = replyRepository;
+        this.commentMapper = commentMapper;
     }
     @PostMapping
     public ResponseEntity postContent(@Valid @RequestBody ContentPostDto contentPostDto,
@@ -56,8 +65,12 @@ public class ContentController {
     public ResponseEntity getContent(@PathVariable("contentId") long contentId){
         ContentResponseDto response = contentService.getContent(contentId);
         List<Comment> findComments = contentService.findVerifyComments(contentId);
+        List<CommentResponseDto> findCommentsList =
+                findComments.stream()
+                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment)))
+                        .collect(Collectors.toList());
 
-        return new ResponseEntity<>(new ContentGetResponseDto(response, findComments), HttpStatus.OK);
+        return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
     }
 
     @GetMapping

@@ -1,5 +1,6 @@
 package com.example.practice.member;
 
+import com.example.practice.content.Content;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.memberDto.MemberInterface;
@@ -8,6 +9,8 @@ import com.example.practice.member.memberDto.MemberResponseDto;
 import com.example.practice.member.memberDto.duplicate.MemberNickname;
 import com.example.practice.member.memberDto.duplicate.MemberPassword;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class MemberService {
         this.memberMapper = memberMapper;
     }
 
+    //principal에서 memberId 추출
     public long extractMemberId(Authentication authentication){
         Object principal = authentication.getPrincipal();
         Member user = (Member) principal;
@@ -49,6 +53,7 @@ public class MemberService {
         member1.setNickname(member.getNickname());
         member1.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member1.setRole("USER");
+        //초기 ADMIN은 환경변수로 하나만 설정
 
         Member savedMember = memberRepository.save(member1);
 
@@ -78,6 +83,10 @@ public class MemberService {
         MemberResponseDto result = memberMapper.memberToMemberResponseDto(member1);
 
         return result;
+    }
+    public Page<Member> findPageMember(String role, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return memberRepository.findAllByRoleOrderByMemberIdDesc(role, pageRequest);
     }
     public List<MemberInterface> getAllMembers(){
         List<MemberInterface> members = memberRepository.findAllWithout();
@@ -154,7 +163,7 @@ public class MemberService {
 
     public Member changeRole(long memberId){
         Member member = em.find(Member.class, memberId);
-        member.setRole("NORMAL");
+        member.setRole("ADMIN");
 
         return memberRepository.save(member);
     }
