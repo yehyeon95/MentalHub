@@ -1,6 +1,22 @@
+import '@toast-ui/editor/dist/toastui-editor-viewer.css';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import { useRef } from 'react';
 import { Editor as Writer } from '@toast-ui/react-editor';
 
 function WriteComponent() {
+    const editorRef = useRef(null);
+
+    const onChangeHandle = () => {
+        if (editorRef.current) {
+            const htmlElement = editorRef.current.getInstance().getHTML();
+            console.log('html' + htmlElement);
+            const json = JSON.stringify(htmlElement);
+            console.log('json : ' + json);
+        }
+    };
+
+    const onUploadWrite = () => {};
+
     return (
         <div>
             <div className="container">
@@ -12,16 +28,17 @@ function WriteComponent() {
                         height="500px" // 에디터 높이 설정
                         initialEditType="markdown" // 초기 에디터 타입 설정 (markdown 또는 wysiwyg)
                         useCommandShortcut={true} // 단축키 사용 설정
-                        //onChange={onChangeHandle}
+                        ref={editorRef} // 에디터 ref 설정
+                        onChange={onChangeHandle} // 변경 핸들러 설정
                         toolbarItems={[
                             ['heading', 'bold', 'strike'],
                             ['hr', 'quote'],
                             ['ul', 'ol', 'task'],
                             ['table', 'image', 'link'],
-                            ['code', 'codeblock'],
                         ]}
                     />
                 </div>
+                <button onClick={onUploadWrite} className="btn btn-primary"></button>
             </div>
         </div>
     );
