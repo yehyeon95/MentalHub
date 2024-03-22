@@ -1,9 +1,7 @@
-import JoinComponent from "../components/join";
+import JoinComponent from '../components/join';
 
 const Join = () => {
-    return (
-        <JoinComponent />
-    );
-}
+    return <JoinComponent />;
+};
 
-export default Join
+export default Join;

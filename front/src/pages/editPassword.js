@@ -1,9 +1,7 @@
-import EditPasswordComponent from "../components/editPasswordComponent"
+import EditPasswordComponent from '../components/editPasswordComponent';
 
-function EditPassword (){
-    return (
-        <EditPasswordComponent />
-    )
+function EditPassword() {
+    return <EditPasswordComponent />;
 }
 
-export default EditPassword
+export default EditPassword;

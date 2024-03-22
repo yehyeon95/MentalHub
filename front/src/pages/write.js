@@ -1,11 +1,11 @@
-import WriteComponent from "../components/writeComponent";
+import WriteComponent from '../components/writeComponent';
 
-function Write () {
+function Write() {
     return (
         <div>
             <WriteComponent />
         </div>
-    )
+    );
 }
 
 export default Write;

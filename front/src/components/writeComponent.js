@@ -1,7 +1,6 @@
-import {Editor as Writer} from '@toast-ui/react-editor';
+import { Editor as Writer } from '@toast-ui/react-editor';
 
-function WriteComponent () {
-    
+function WriteComponent() {
     return (
         <div>
             <div className="container">
@@ -25,7 +24,7 @@ function WriteComponent () {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default WriteComponent
+export default WriteComponent;

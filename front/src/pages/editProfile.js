@@ -1,7 +1,7 @@
-import EditProfileComponent from "../components/editprofilecomponent";
+import EditProfileComponent from '../components/editprofilecomponent';
 
-const EditProfile =()=> {
-    return <EditProfileComponent />
-}
+const EditProfile = () => {
+    return <EditProfileComponent />;
+};
 
-export default EditProfile
+export default EditProfile;

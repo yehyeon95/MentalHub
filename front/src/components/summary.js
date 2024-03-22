@@ -1,11 +1,10 @@
-import {useState, useEffect} from 'react'
-import { fetchUserInfo } from '../util/fetchUser'
+import { useState, useEffect } from 'react';
+import { fetchUserInfo } from '../util/fetchUser';
 
-function Summary(){
-
-    const [myPostCount, setMyPostCount] = useState(0)
-    const [myAnswerCount, setMyAnswerCount] = useState(0)
-    const [receivedRecommendation, setReceivedRecommendation] = useState(0)
+function Summary() {
+    const [myPostCount, setMyPostCount] = useState(0);
+    const [myAnswerCount, setMyAnswerCount] = useState(0);
+    const [receivedRecommendation, setReceivedRecommendation] = useState(0);
 
     // useEffect(()=>{
     //     getUserInfo()
@@ -22,19 +21,19 @@ function Summary(){
     // setReceivedRecommendation(data.myrecommendationCount)
 
     return (
-        <div className='container justify-content-center'>
+        <div className="container justify-content-center">
             <div className="mb-4">내 정보 요약입니다.</div>
-            <div className='border p-4 mb-4 text-center'>
+            <div className="border p-4 mb-4 text-center">
                 <h6>내가 작성한 글의 수: {myPostCount}</h6>
             </div>
-            <div className='border p-4 mb-4 text-center'>
+            <div className="border p-4 mb-4 text-center">
                 <h6>내가 작성한 답변의 수: {myAnswerCount}</h6>
             </div>
-            <div className='border p-4 mb-4 text-center'>
+            <div className="border p-4 mb-4 text-center">
                 <h6>내가 받은 추천의 수: {receivedRecommendation}</h6>
             </div>
         </div>
-    )
+    );
 }
 
-export default Summary
+export default Summary;

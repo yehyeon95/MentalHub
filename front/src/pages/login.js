@@ -1,9 +1,7 @@
-import LoginComponent from '../components/login'
+import LoginComponent from '../components/login';
 
-const Login=()=> {
-    return (
-        <LoginComponent />
-    );
-}
+const Login = () => {
+    return <LoginComponent />;
+};
 
-export default Login
+export default Login;
