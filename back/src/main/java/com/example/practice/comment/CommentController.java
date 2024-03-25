@@ -1,5 +1,6 @@
 package com.example.practice.comment;
 
+import com.example.practice.comment.commentDto.CommentBody;
 import com.example.practice.comment.commentDto.CommentPostDto;
 import com.example.practice.content.ContentMapper;
 import com.example.practice.content.ContentService;
@@ -29,5 +30,20 @@ public class CommentController {
                                       Authentication authentication){
         Comment comment = commentService.createComment(authentication, commentPostDto);
         return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity patchComment(@PathVariable("commentId") long commentId,
+                                       @Valid @RequestBody CommentPostDto commentPostDto,
+                                       Authentication authentication){
+        Comment comment = commentService.updateComment(commentPostDto, commentId, authentication);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable("commentId") long commentId,
+                                        Authentication authentication){
+        commentService.deleteComment(commentId, authentication);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

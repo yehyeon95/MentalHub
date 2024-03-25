@@ -1,5 +1,6 @@
 package com.example.practice.comment;
 
+import com.example.practice.comment.commentDto.CommentBody;
 import com.example.practice.comment.commentDto.CommentPostDto;
 import com.example.practice.content.Content;
 import com.example.practice.content.ContentDto.ContentPostDto;
@@ -8,6 +9,7 @@ import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
+import com.example.practice.member.memberDto.duplicate.MemberNickname;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,30 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         return savedComment;
+    }
+    public Comment updateComment(CommentPostDto commentPostDto, long commentId, Authentication authentication){
+        long memberId = extractMemberId(authentication);
+
+        Comment comment = em.find(Comment.class, commentId);
+
+        if(memberId==comment.getMember().getMemberId()){
+            comment.setCommentBody(commentPostDto.getCommentBody());
+        }
+        else throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
+
+        return commentRepository.save(comment);
+    }
+
+    public void deleteComment(long commentId, Authentication authentication){
+        long memberId = extractMemberId(authentication);
+
+        Comment comment = em.find(Comment.class, commentId);
+
+        if(memberId==comment.getMember().getMemberId()){
+            commentRepository.delete(comment);
+        }
+        else throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
+
     }
     public Comment findVerifiedComment(long commentId) {
         Optional<Comment> optionalComment =
