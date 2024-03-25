@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
     List<Reply> findAllByComment(Comment comment);
+    long countAllByContent(Content content);
 }

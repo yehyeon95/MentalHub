@@ -10,6 +10,7 @@ import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.member.memberDto.MemberResponseDto;
+import com.example.practice.reply.ReplyRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,17 +30,20 @@ public class ContentService {
     private final EntityManager em;
     private final MemberService memberService;
     private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
 
     public ContentService(ContentMapper contentMapper,
                           ContentRepository contentRepository,
                           EntityManager em,
                           MemberService memberService,
-                          CommentRepository commentRepository){
+                          CommentRepository commentRepository,
+                          ReplyRepository replyRepository){
         this.contentMapper = contentMapper;
         this.contentRepository = contentRepository;
         this.em = em;
         this.memberService = memberService;
         this.commentRepository = commentRepository;
+        this.replyRepository = replyRepository;
     }
 
     public long extractMemberId(Authentication authentication){
@@ -126,10 +130,14 @@ public class ContentService {
     //게시글의 댓글수 반환
     public long getCommentsCount(long contentId){
         Content content = findVerifiedContent(contentId);
-        long result = Long.valueOf(commentRepository.countAllByContent(content));
+        long commentsCnt = Long.valueOf(commentRepository.countAllByContent(content));
+        long repliesCnt = Long.valueOf(replyRepository.countAllByContent(content));
+
+        long result = commentsCnt+repliesCnt;
 
         return result;
     }
+
     //게시글의 댓글 리스트 반환
     public List<Comment> findVerifyComments(long contentId){
         Content content = findVerifiedContent(contentId);
