@@ -9,10 +9,14 @@ import com.example.practice.content.ContentService;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.reply.dto.ReplyPostDto;
+import com.example.practice.reply.dto.ReplyResponseDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,17 +26,20 @@ public class ReplyService {
     private final ContentService contentService;
     private final CommentService commentService;
     private final ReplyRepository replyRepository;
+    private final ReplyMapper replyMapper;
 
     public ReplyService(EntityManager em,
                           MemberService memberService,
                           ContentService contentService,
                           ReplyRepository replyRepository,
-                        CommentService commentService){
+                        CommentService commentService,
+                        ReplyMapper replyMapper){
         this.em = em;
         this.memberService = memberService;
         this.contentService = contentService;
         this.replyRepository = replyRepository;
         this.commentService = commentService;
+        this.replyMapper = replyMapper;
     }
     public long extractMemberId(Authentication authentication){
         Object principal = authentication.getPrincipal();
@@ -59,6 +66,13 @@ public class ReplyService {
         Reply savedReply = replyRepository.save(reply);
 
         return savedReply;
+    }
+    public List<ReplyResponseDto> mapReplies(List<Reply> replies){
+        List<ReplyResponseDto> resultReplies =
+                replies.stream()
+                        .map(reply-> replyMapper.ReplyToReplyResponseDto(reply))
+                        .collect(Collectors.toList());
+        return resultReplies;
     }
 
 }

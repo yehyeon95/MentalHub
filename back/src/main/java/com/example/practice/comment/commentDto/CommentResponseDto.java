@@ -4,6 +4,7 @@ import com.example.practice.comment.Comment;
 import com.example.practice.content.ContentDto.ContentResponseDto;
 import com.example.practice.member.Member;
 import com.example.practice.reply.Reply;
+import com.example.practice.reply.dto.ReplyResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,6 @@ public class CommentResponseDto {
     private long contentId;
     private LocalDateTime created_at;
     private String commentBody;
-    private List<Reply> replies;
+    private List<ReplyResponseDto> replies;
 
 }

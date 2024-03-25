@@ -64,7 +64,9 @@ public class ContentController {
     @GetMapping("/{contentId}")
     public ResponseEntity getContent(@PathVariable("contentId") long contentId){
         ContentResponseDto response = contentService.getContent(contentId);
+
         List<Comment> findComments = contentService.findVerifyComments(contentId);
+
         List<CommentResponseDto> findCommentsList =
                 findComments.stream()
                         .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment)))
