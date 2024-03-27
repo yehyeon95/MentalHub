@@ -74,7 +74,7 @@ const LoginComponent = () => {
         };
 
         let login = await fetchUserLogin(JSON.stringify(data)).then((data) => {
-            console.log('data확인 :' + data.memberId);
+            console.log('data확인 :' + data);
             if (data) {
                 goHome();
             }

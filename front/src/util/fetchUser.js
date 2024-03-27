@@ -27,7 +27,7 @@ export const fetchUserJoin = async (data) => {
 export const fetchUserLogin = async (data) => {
     return fetch('/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        headers: { 'content-type': 'application/json;charset=UTF-8', 'ngrok-skip-browser-warning': '69420' },
         body: data,
     })
         .then((res) => {
