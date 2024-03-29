@@ -3,7 +3,7 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchSinglePost } from '../util/fetchBoard';
+import { fetchSinglePost, fetchPostDelete } from '../util/fetchBoard';
 import { formatDate } from '../util/util';
 
 function SingleViewComponent() {
@@ -24,8 +24,12 @@ function SingleViewComponent() {
         navigate(`/contents/edit/${id}`);
     };
 
-    const handleGoDelete = () => {
-        navigate(`/contents/delete/${id}`);
+    const handleGoDelete = async (callback) => {
+        let path = await fetchPostDelete(id).then((data) => {
+            console.log('응답확인', data); //이렇게 받아야 object가 보임
+            alert('게시글이 삭제되었습니다.');
+            navigate('/');
+        });
     };
 
     const formattedModDate = formatDate(postData.modifiedAt);
