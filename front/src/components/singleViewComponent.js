@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchSinglePost, fetchPostDelete } from '../util/fetchBoard';
 import { formatDate } from '../util/util';
+import Comment from './comment';
 import CommentWrite from './commentWrite';
 function SingleViewComponent() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [postData, setPostData] = useState('');
     const [contentId, setContentId] = useState('');
+    const [commentData, setCommentData] = useState([]);
     useEffect(() => {
         getSingleView();
     }, []);
@@ -19,6 +21,7 @@ function SingleViewComponent() {
             setPostData(data.contentResponseDto);
             console.log(data.commentsList);
             setContentId(data.contentResponseDto.contentId);
+            setCommentData(data.commentsList);
             //console.log(postData.memberId == sessionStorage.getItem('memberId'));
         });
     };
@@ -81,6 +84,7 @@ function SingleViewComponent() {
                             </button>
                         </div>
                     )}
+                    <Comment commentData={commentData} />
                     {sessionStorage.getItem('memberId') && <CommentWrite contentId={contentId} />}
                 </div>
             </div>

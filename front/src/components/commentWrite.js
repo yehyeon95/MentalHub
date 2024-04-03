@@ -19,7 +19,7 @@ function CommentWrite(contentId) {
             commentBody: comment,
             contentId: num,
         };
-
+        console.log(data);
         let path = await fetchCommentWrite(JSON.stringify(data)).then((data) => {
             if (data) {
                 console.log(data);
@@ -29,8 +29,8 @@ function CommentWrite(contentId) {
 
     return (
         <div className="container mt-4">
-            <h4>댓글 쓰기</h4>
-            <form onSubmit={handleSubmit} className="row">
+            <p>댓글 쓰기</p>
+            <form className="row">
                 <div className="mb-3 col-md-11">
                     <textarea
                         placeholder="댓글을 작성해주세요"
@@ -42,7 +42,7 @@ function CommentWrite(contentId) {
                         required
                     ></textarea>
                 </div>
-                <button type="submit" className="btn btn-primary col-md-1">
+                <button onClick={handleSubmit} className="btn btn-primary col-md-1">
                     댓글 작성
                 </button>
             </form>

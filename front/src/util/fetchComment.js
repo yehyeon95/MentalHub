@@ -1,5 +1,5 @@
 export const fetchCommentWrite = async (data) => {
-    return fetch('comments', {
+    return fetch('/comments', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
