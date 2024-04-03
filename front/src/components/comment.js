@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { formatDate } from '../util/util';
-import { fetchCommentEdit } from '../util/fetchComment';
+import { fetchCommentDelete, fetchCommentEdit } from '../util/fetchComment';
+import { Modal, Button } from 'react-bootstrap';
 
 function Comment({ commentData }) {
     const [editIndex, setEditIndex] = useState(null); // 수정 중인 댓글의 인덱스를 저장하는 상태
     const [editComment, setEditComment] = useState('');
+    const [showDelModal, setShowDelModal] = useState(false);
 
     const handleCancelEdit = () => {
         setEditIndex(null);
@@ -30,7 +32,7 @@ function Comment({ commentData }) {
 
         const data = {
             commentBody: editComment,
-            contentId: commentData.commentId,
+            contentId: commentData[index].contentId,
         };
         let path = await fetchCommentEdit(JSON.stringify(data), num).then((data) => {
             if (data.ok) {
@@ -39,13 +41,34 @@ function Comment({ commentData }) {
         });
     };
 
-    const handleGoDelete = () => {
-        // 삭제 로직 추가
+    const handleGoDelete = (index) => {
+        setEditIndex(index);
+        setShowDelModal(true);
+        //console.log(showDelModal);
+    };
+
+    const handleCancelDelete = () => {
+        setShowDelModal(false);
+    };
+
+    const confirmDelete = async (index) => {
+        //console.log(index);
+        const num = commentData[index].commentId;
+        //console.log(num);
+
+        const data = {
+            contentId: commentData[index].contentId,
+        };
+        let path = await fetchCommentDelete(JSON.stringify(data), num).then((data) => {
+            if (data.ok) {
+                window.location.reload();
+            }
+        });
     };
 
     return (
         <div>
-            <p>댓글</p>
+            <p>댓글 : {commentData.length}</p>
             {commentData.map((comment, index) => (
                 <div key={comment.commentId} className="card mb-3">
                     <div className="card-body">
@@ -55,7 +78,7 @@ function Comment({ commentData }) {
                                     <small className="m-0 me-3">작성자: {comment.memberId}</small>
                                     <small className="text-muted">작성시간: {formatDate(comment.created_at)}</small>
                                 </div>
-                                {comment.memberId == sessionStorage.getItem('memberId') && (
+                                {comment.memberId == sessionStorage.getItem('memberId') && !comment.deleted && (
                                     <div className="d-flex">
                                         <button
                                             type="button"
@@ -67,7 +90,7 @@ function Comment({ commentData }) {
                                         <button
                                             type="button"
                                             className="btn btn-secondary btn-sm"
-                                            onClick={handleGoDelete}
+                                            onClick={() => handleGoDelete(index)}
                                         >
                                             삭제
                                         </button>
@@ -102,6 +125,22 @@ function Comment({ commentData }) {
                     </div>
                 </div>
             ))}
+            <Modal show={showDelModal} onHide={handleCancelDelete}>
+                <Modal.Header closeButton>
+                    <Modal.Title>댓글 삭제</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>이 댓글을 삭제하시겠습니까?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCancelDelete}>
+                        취소
+                    </Button>
+                    <Button variant="danger" onClick={() => confirmDelete(editIndex)}>
+                        삭제
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
