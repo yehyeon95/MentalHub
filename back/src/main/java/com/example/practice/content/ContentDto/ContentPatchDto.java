@@ -7,14 +7,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ContentPatchDto {
-    @NotBlank
     private String title;
-    @NotBlank
     private String body;
-    @NotBlank
     private String font;
-    @NotBlank
     private long fontSize;
-    @NotBlank
     private String type;
+
 }

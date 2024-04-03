@@ -15,6 +15,7 @@ import java.util.List;
 public class ContentResponseDto {
     private long contentId;
     private long memberId;
+    private String nickname;
     private String title;
     private String body;
     private String font;
@@ -25,4 +26,5 @@ public class ContentResponseDto {
     private long views;
     private String type;
     private long commentsCount;
+    private boolean Modified;
 }

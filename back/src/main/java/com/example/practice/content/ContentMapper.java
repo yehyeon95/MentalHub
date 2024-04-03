@@ -12,10 +12,11 @@ import java.util.List;
 @Component
 public class ContentMapper {
 
-    public ContentResponseDto ContentToContentResponseDto(Content content, long memberId, long commentsCount){
+    public ContentResponseDto ContentToContentResponseDto(Content content, long memberId, String nickname, long commentsCount){
         return new ContentResponseDto(
                 content.getContentId(),
                 memberId,
+                nickname,
                 content.getTitle(),
                 content.getBody(),
                 content.getFont(),
@@ -25,7 +26,8 @@ public class ContentMapper {
                 content.getModifiedAt(),
                 content.getViews(),
                 content.getType(),
-                commentsCount
+                commentsCount,
+                content.isModified()
         );
     }
 }

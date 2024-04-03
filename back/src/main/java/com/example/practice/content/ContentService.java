@@ -65,6 +65,7 @@ public class ContentService {
         content.setBody(contentPostDto.getBody());
         content.setTitle(contentPostDto.getTitle());
         content.setType(contentPostDto.getType());
+        content.setModified(false);
         //사진 첨부 기능 추가
 
         Content savedContent = contentRepository.save(content);
@@ -80,6 +81,7 @@ public class ContentService {
         content.setTitle(contentPatchDto.getTitle());
         content.setBody(contentPatchDto.getBody());
         content.setType(contentPatchDto.getType());
+        content.setModified(true);
 
         return contentRepository.save(content);
     }
@@ -95,7 +97,7 @@ public class ContentService {
 
         Content savedcontent = contentRepository.save(content);
 
-        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedcontent, savedcontent.getMember().getMemberId(),
+        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedcontent, savedcontent.getMember().getMemberId(), savedcontent.getMember().getNickname(),
                 getCommentsCount(savedcontent.getContentId()));
 
         return result;

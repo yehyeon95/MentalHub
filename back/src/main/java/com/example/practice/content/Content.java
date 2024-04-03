@@ -38,7 +38,7 @@ public class Content {
     @Column(length = 1000, nullable = true, updatable = true, unique = false, name = "font")
     private String font;
 
-    @Column(length = 10000, nullable = false, updatable = true, unique = false, name = "body")
+    @Column(length = 50000, nullable = false, updatable = true, unique = false, name = "body")
     private String body;
 
     @Column(nullable = true, updatable = true, unique = false, name = "font_size")
@@ -66,6 +66,9 @@ public class Content {
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
     private List<Reply> replies;
+
+    @Column(updatable = true, unique = false, name = "modified")
+    private boolean Modified;
 
     public Content(String title, String body){
         this.title = title;

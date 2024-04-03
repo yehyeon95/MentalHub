@@ -47,7 +47,7 @@ public class ContentController {
                                       Authentication authentication){
 
         Content content = contentService.createContent(authentication, contentPostDto);
-        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),0);
+        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),content.getMember().getNickname(),0);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -56,7 +56,7 @@ public class ContentController {
     public ResponseEntity patchContent(@PathVariable("contentId") long contentId,
                                        @Valid @RequestBody ContentPatchDto contentPatchDto){
         Content content = contentService.updateContent(contentId, contentPatchDto);
-        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),contentService.getCommentsCount(contentId));
+        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),content.getMember().getNickname(),contentService.getCommentsCount(contentId));
 
         return new ResponseEntity<>(response, HttpStatus.OK);//
     }
@@ -87,7 +87,7 @@ public class ContentController {
 
         List<ContentResponseDto> response =
                 contents.stream()
-                        .map(content-> contentMapper.ContentToContentResponseDto(content,content.getMember().getMemberId(),contentService.getCommentsCount(content.getContentId())))
+                        .map(content-> contentMapper.ContentToContentResponseDto(content,content.getMember().getMemberId(),content.getMember().getNickname(),contentService.getCommentsCount(content.getContentId())))
                         .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ContentPageResponseDto(response, pageInfo), HttpStatus.OK);

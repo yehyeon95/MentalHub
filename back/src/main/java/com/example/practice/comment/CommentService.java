@@ -76,6 +76,7 @@ public class CommentService {
 
         Comment comment = em.find(Comment.class, commentId);
 
+        //comment 삭제시 정보는 그대로. 바디만 삭제
         if(memberId==comment.getMember().getMemberId()){
             commentRepository.delete(comment);
         }
