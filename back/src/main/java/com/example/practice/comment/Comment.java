@@ -47,6 +47,8 @@ public class Comment {
     private LocalDateTime created_at;
 
     private long votes;
+    @Column(updatable = true, unique = false, name = "deleted")
+    private boolean deleted;
 
     public Comment(String commentBody){
         this.commentBody = commentBody;

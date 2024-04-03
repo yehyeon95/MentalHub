@@ -53,6 +53,7 @@ public class CommentService {
         comment.setCommentBody(commentPostDto.getCommentBody());
         comment.setMember(member);
         comment.setContent(content);
+        comment.setDeleted(false);
 
         Comment savedComment = commentRepository.save(comment);
 
@@ -71,18 +72,20 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public void deleteComment(long commentId, Authentication authentication){
+    public Comment deleteComment(long commentId, Authentication authentication){
         long memberId = extractMemberId(authentication);
 
         Comment comment = em.find(Comment.class, commentId);
 
         //comment 삭제시 정보는 그대로. 바디만 삭제
         if(memberId==comment.getMember().getMemberId()){
-            commentRepository.delete(comment);
+            comment.setCommentBody("삭제된 댓글입니다.");
+            comment.setDeleted(true);
         }
         else throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
-
+        return commentRepository.save(comment);
     }
+
     public Comment findVerifiedComment(long commentId) {
         Optional<Comment> optionalComment =
                 commentRepository.findByCommentId(commentId);

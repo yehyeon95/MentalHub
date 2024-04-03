@@ -26,6 +26,7 @@ public class CommentMapper {
                 comment.getContent().getContentId(),
                 comment.getCreated_at(),
                 comment.getCommentBody(),
+                comment.isDeleted(),
                 replyService.mapReplies(replies));
     }
 }

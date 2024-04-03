@@ -21,6 +21,7 @@ public class CommentResponseDto {
     private long contentId;
     private LocalDateTime created_at;
     private String commentBody;
+    private boolean deleted;
     private List<ReplyResponseDto> replies;
 
 }
