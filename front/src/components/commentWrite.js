@@ -6,14 +6,12 @@ function CommentWrite(contentId) {
     const num = contentData.contentId;
     const handleChange = (e) => {
         setComment(e.target.value);
-        // console.log(comment);
-        // console.log(num);
-        // console.log(contentId);
     };
 
     const handleSubmit = async (callback) => {
         if (!comment) {
             alert('내용을 입력해주세요!');
+            return;
         }
         const data = {
             commentBody: comment,
