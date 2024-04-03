@@ -43,7 +43,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity deleteComment(@PathVariable("commentId") long commentId,
                                         Authentication authentication){
-        commentService.deleteComment(commentId, authentication);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Comment comment = commentService.deleteComment(commentId, authentication);
+        return new ResponseEntity<>(comment, HttpStatus.NO_CONTENT);
     }
 }

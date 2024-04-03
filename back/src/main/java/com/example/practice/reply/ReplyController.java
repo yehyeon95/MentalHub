@@ -33,12 +33,21 @@ public class ReplyController {
     }
 
     @PatchMapping("/{replyId}")
-    public ResponseEntity patchComment(@PathVariable("replyId") long replyId,
+    public ResponseEntity patchReply(@PathVariable("replyId") long replyId,
                                        @Valid @RequestBody ReplyPostDto replyPostDto,
                                        Authentication authentication){
         Reply reply = replyService.updateReply(replyPostDto, replyId, authentication);
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{replyId}")
+    public ResponseEntity deleteReply(@PathVariable("replyId") long replyId,
+                                      Authentication authentication){
+        Reply reply = replyService.deleteReply(replyId, authentication);
+        return new ResponseEntity<>(reply, HttpStatus.NO_CONTENT);
+
+    }
+
 
 
 }
