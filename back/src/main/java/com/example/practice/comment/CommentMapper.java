@@ -23,6 +23,7 @@ public class CommentMapper {
         return new CommentResponseDto(
                 comment.getCommentId(),
                 comment.getMember().getMemberId(),
+                comment.getMember().getNickname(),
                 comment.getContent().getContentId(),
                 comment.getCreated_at(),
                 comment.getCommentBody(),

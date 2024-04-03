@@ -18,6 +18,7 @@ import java.util.List;
 public class CommentResponseDto {
     private long commentId;
     private long memberId;
+    private String nickname;
     private long contentId;
     private LocalDateTime created_at;
     private String commentBody;

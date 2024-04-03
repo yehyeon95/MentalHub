@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class ReplyResponseDto {
     private long replyId;
     private long memberId;
+    private String nickname;
     private long contentId;
     private long commentId;
     private String replyBody;

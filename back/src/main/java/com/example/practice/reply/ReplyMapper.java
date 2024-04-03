@@ -14,6 +14,7 @@ public class ReplyMapper {
         return new ReplyResponseDto(
                 reply.getReplyId(),
                 reply.getMember().getMemberId(),
+                reply.getMember().getNickname(),
                 reply.getContent().getContentId(),
                 reply.getComment().getCommentId(),
                 reply.getReplyBody(), 
