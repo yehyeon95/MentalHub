@@ -20,12 +20,9 @@ function WriteComponent() {
     const handleTitle = (e) => {
         setTitle(e.target.value);
     };
-    const onChangeHandle = () => {
-        if (editorRef.current) {
-            const htmlElement = editorRef.current.getInstance().getHTML();
-            setBody(htmlElement);
-        }
-    };
+    // const onChangeHandle = (e) => {
+    //     setBody(e.target.value);
+    // };
 
     const handleItemClick = (e) => {
         setBoardType(e);
@@ -43,16 +40,27 @@ function WriteComponent() {
         console.log(type);
     };
 
+    const checkPostSubmit = () => {
+        if (!title) {
+            alert('제목을 작성해주세요');
+        } else if (!type) {
+            alert('게시글 타입을 선택해주세요');
+        } else if (!body) {
+            alert('내용을 작성해주세요');
+        }
+    };
+
     const onUploadWrite = async (callback) => {
         // const jsonTitle = JSON.stringify(title);
         // const jsonBody = JSON.stringify(body);
         // const type = JSON.stringify('post');
         // json으로 변환한 뒤에 객체로 만들면 배드 리퀘스트 뜸
         // 객체로 만들어서 data로 묶은 다음에 json으로 만들어야함
+        checkPostSubmit();
         console.log('type확인 :' + type);
         const data = {
             title: title,
-            body: body,
+            body: editorRef.current.getInstance().getMarkdown(),
             type: type,
         };
 
@@ -122,7 +130,7 @@ function WriteComponent() {
                         initialEditType="markdown" // 초기 에디터 타입 설정 (markdown 또는 wysiwyg)
                         useCommandShortcut={true} // 단축키 사용 설정
                         ref={editorRef} // 에디터 ref 설정
-                        onChange={onChangeHandle} // 변경 핸들러 설정
+                        //onChange={onChangeHandle} // 변경 핸들러 설정
                         toolbarItems={[
                             ['heading', 'bold', 'strike'],
                             ['hr', 'quote'],
