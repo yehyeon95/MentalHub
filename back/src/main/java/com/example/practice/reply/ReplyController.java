@@ -32,5 +32,13 @@ public class ReplyController {
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
+    @PatchMapping("/{replyId}")
+    public ResponseEntity patchComment(@PathVariable("replyId") long replyId,
+                                       @Valid @RequestBody ReplyPostDto replyPostDto,
+                                       Authentication authentication){
+        Reply reply = replyService.updateReply(replyPostDto, replyId, authentication);
+        return new ResponseEntity<>(reply, HttpStatus.OK);
+    }
+
 
 }

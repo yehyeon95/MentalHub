@@ -17,4 +17,5 @@ public class ReplyResponseDto {
     private String replyBody;
     private LocalDateTime created_at;
     private long votes;
+    private boolean deleted;
 }

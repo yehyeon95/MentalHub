@@ -18,7 +18,8 @@ public class ReplyMapper {
                 reply.getComment().getCommentId(),
                 reply.getReplyBody(), 
                 reply.getCreated_at(),
-                reply.getVotes());
+                reply.getVotes(),
+                reply.isDeleted());
     }
 }
 

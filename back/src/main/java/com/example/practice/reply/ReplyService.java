@@ -6,6 +6,8 @@ import com.example.practice.comment.CommentService;
 import com.example.practice.comment.commentDto.CommentPostDto;
 import com.example.practice.content.Content;
 import com.example.practice.content.ContentService;
+import com.example.practice.global.exception.BusinessLogicException;
+import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.reply.dto.ReplyPostDto;
@@ -62,11 +64,38 @@ public class ReplyService {
         reply.setMember(member);
         reply.setContent(content);
         reply.setComment(comment);
+        reply.setDeleted(false);
 
         Reply savedReply = replyRepository.save(reply);
 
         return savedReply;
     }
+    public Reply updateReply(ReplyPostDto replyPostDto, long replyId, Authentication authentication){
+        long memberId = extractMemberId(authentication);
+
+        Reply reply = em.find(Reply.class, replyId);
+
+        if(memberId==reply.getMember().getMemberId()){
+            reply.setReplyBody(replyPostDto.getReplyBody());
+        }
+        else throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
+
+        return replyRepository.save(reply);
+    }
+
+    public Reply deleteReply(long replyId, Authentication authentication){
+        long memberId = extractMemberId(authentication);
+
+        Reply reply = em.find(Reply.class, replyId);
+
+        if(memberId==reply.getMember().getMemberId()){
+            reply.setReplyBody("삭제된 댓글입니다.");
+            reply.setDeleted(true);
+        }
+        else throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
+        return replyRepository.save(reply);
+    }
+
     public List<ReplyResponseDto> mapReplies(List<Reply> replies){
         List<ReplyResponseDto> resultReplies =
                 replies.stream()

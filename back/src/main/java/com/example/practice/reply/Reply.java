@@ -47,6 +47,8 @@ public class Reply {
     private LocalDateTime created_at;
 
     private long votes;
+    @Column(updatable = true, unique = false, name = "deleted")
+    private boolean deleted;
 
     public Reply(String replyBody){
         this.replyBody = replyBody;
