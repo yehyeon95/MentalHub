@@ -7,9 +7,6 @@ import { fetchPostUpdate, fetchSinglePost } from '../util/fetchBoard';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; //부트스트랩을 따로 npm 으로 다운받았는데 왜 이걸 다시 써야하는지 모르겠음 이걸 써야지 드롭다운 메뉴가 열림
 
 function EditWriteComponent() {
-    /**
-     * TODO : 관리자만 공지 게시글 작성하게 하기
-     */
     const { id } = useParams();
     const navigate = useNavigate();
     const editorRef = useRef(null);
@@ -19,23 +16,59 @@ function EditWriteComponent() {
     const [type, setType] = useState(''); //실제 요청을 보낼때의 타입상태변화
     const [postData, setPostData] = useState('');
 
+    // useEffect(() => {
+    //     getSingleView();
+    //     //console.log(body);
+    // }, []);
+
+    // const getSingleView = async (callback) => {
+    //     let path = await fetchSinglePost(id).then((data) => {
+    //         setPostData(data.contentResponseDto);
+    //         setTitle(data.contentResponseDto.title); // 제목 설정
+    //         setBody(data.contentResponseDto.body); // 본문 설정
+    //         handleChangeType(data.contentResponseDto.type); // 타입 설정
+    //     });
+    //     console.log(body);
+    // };
+
     useEffect(() => {
-        getSingleView();
-    }, []);
-    const getSingleView = async (callback) => {
-        let path = await fetchSinglePost(id).then((data) => {
-            setPostData(data.contentResponseDto);
-        });
+        const fetchData = async () => {
+            try {
+                const data = await fetchSinglePost(id);
+                if (data && data.contentResponseDto) {
+                    const { title, body, type } = data.contentResponseDto;
+                    setTitle(title);
+                    setBody(body);
+                    handleChangeType(type);
+                    setBoardType(type === 'post' ? '일반 게시글' : type === 'info' ? '정보 게시글' : '공지 게시글');
+                }
+            } catch (error) {
+                console.error('Error fetching post:', error);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
+    // body가 변경될 때마다 editor의 value를 업데이트
+    useEffect(() => {
+        if (editorRef.current && body !== '') {
+            editorRef.current.getInstance().setMarkdown(body);
+        }
+    }, [body]);
+
+    const checkPostSubmit = () => {
+        if (!title) {
+            alert('제목을 작성해주세요');
+        } else if (!type) {
+            alert('게시글 타입을 선택해주세요');
+        } else if (!body) {
+            alert('내용을 작성해주세요');
+        }
     };
 
     const handleTitle = (e) => {
         setTitle(e.target.value);
-    };
-    const onChangeHandle = () => {
-        if (editorRef.current) {
-            const htmlElement = editorRef.current.getInstance().getHTML();
-            setBody(htmlElement);
-        }
     };
 
     const handleItemClick = (e) => {
@@ -54,15 +87,11 @@ function EditWriteComponent() {
         console.log(type);
     };
 
-    const onEditdWrite = async (callback) => {
-        // const jsonTitle = JSON.stringify(title);
-        // const jsonBody = JSON.stringify(body);
-        // const type = JSON.stringify('post');
-        // json으로 변환한 뒤에 객체로 만들면 배드 리퀘스트 뜸
-        // 객체로 만들어서 data로 묶은 다음에 json으로 만들어야함
+    const onEditWrite = async (callback) => {
+        checkPostSubmit();
         const data = {
             title: title,
-            body: body,
+            body: editorRef.current.getInstance().getMarkdown(),
             type: type,
         };
 
@@ -89,7 +118,7 @@ function EditWriteComponent() {
                         type="text"
                         onChange={handleTitle}
                         className="form-control mb-4"
-                        Value={postData.title}
+                        value={title}
                         //placeholder="제목을 입력해주세요"
                     ></input>
                     <div className="dropdown  mb-4">
@@ -130,13 +159,13 @@ function EditWriteComponent() {
                         </ul>
                     </div>
                     <Writer
-                        initialValue={postData.body} // 초기값 설정
+                        value={body} // 초기값 설정
                         previewStyle="vertical" // 미리보기 스타일 설정
                         height="500px" // 에디터 높이 설정
                         initialEditType="markdown" // 초기 에디터 타입 설정 (markdown 또는 wysiwyg)
                         useCommandShortcut={true} // 단축키 사용 설정
                         ref={editorRef} // 에디터 ref 설정
-                        onChange={onChangeHandle} // 변경 핸들러 설정
+                        //onChange={onChangeHandle} // 변경 핸들러 설정
                         toolbarItems={[
                             ['heading', 'bold', 'strike'],
                             ['hr', 'quote'],
@@ -146,7 +175,7 @@ function EditWriteComponent() {
                     />
                 </div>
                 <div>
-                    <button onClick={onEditdWrite} className="btn btn-primary">
+                    <button onClick={onEditWrite} className="btn btn-primary">
                         제출하기
                     </button>
                 </div>

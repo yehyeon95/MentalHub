@@ -31,7 +31,7 @@ function SingleViewComponent() {
             navigate('/');
         });
     };
-
+    const modi = postData.modified;
     const formattedModDate = formatDate(postData.modifiedAt);
     const formattedCreDate = formatDate(postData.createdAt);
 
@@ -41,9 +41,9 @@ function SingleViewComponent() {
                 <div className="col-md-8 offset-md-2">
                     <h2 className="mb-4">{postData.title}</h2>
                     <div className="mb-4 d-flex justify-content-between align-items-center">
-                        <p>작성자 : {postData.username}</p>
+                        <p>작성자 : {postData.nickname}</p>
                         <p>
-                            {formattedModDate ? '수정 시간' : '생성 시간'}: {formattedModDate || formattedCreDate}
+                            {modi ? '수정 시간' : '생성 시간'}: {formattedModDate || formattedCreDate}
                         </p>
                         <p>조회수 : {postData.views}</p>
                         <p>
