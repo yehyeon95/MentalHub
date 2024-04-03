@@ -5,17 +5,20 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchSinglePost, fetchPostDelete } from '../util/fetchBoard';
 import { formatDate } from '../util/util';
-
+import CommentWrite from './commentWrite';
 function SingleViewComponent() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [postData, setPostData] = useState('');
+    const [contentId, setContentId] = useState('');
     useEffect(() => {
         getSingleView();
     }, []);
     const getSingleView = async (callback) => {
         let path = await fetchSinglePost(id).then((data) => {
             setPostData(data.contentResponseDto);
+            console.log(data.commentsList);
+            setContentId(data.contentResponseDto.contentId);
             //console.log(postData.memberId == sessionStorage.getItem('memberId'));
         });
     };
@@ -78,6 +81,7 @@ function SingleViewComponent() {
                             </button>
                         </div>
                     )}
+                    {sessionStorage.getItem('memberId') && <CommentWrite contentId={contentId} />}
                 </div>
             </div>
         </div>
