@@ -19,7 +19,7 @@ function SingleViewComponent() {
     const getSingleView = async (callback) => {
         let path = await fetchSinglePost(id).then((data) => {
             setPostData(data.contentResponseDto);
-            console.log(data.commentsList);
+            //console.log(data.commentsList);
             setContentId(data.contentResponseDto.contentId);
             setCommentData(data.commentsList);
             //console.log(postData.memberId == sessionStorage.getItem('memberId'));

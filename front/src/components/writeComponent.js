@@ -14,7 +14,7 @@ function WriteComponent() {
     const navigate = useNavigate();
     const editorRef = useRef(null);
     const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
+    //const [body, setBody] = useState('');
     const [boardType, setBoardType] = useState(''); //드롭다운 이벤트 상태변화
     const [type, setType] = useState(''); //실제 요청을 보낼때의 타입상태변화
     const handleTitle = (e) => {
@@ -43,11 +43,15 @@ function WriteComponent() {
     const checkPostSubmit = () => {
         if (!title) {
             alert('제목을 작성해주세요');
+            return false;
         } else if (!type) {
             alert('게시글 타입을 선택해주세요');
-        } else if (!body) {
+            return false;
+        } else if (!editorRef.current.getInstance().getMarkdown()) {
             alert('내용을 작성해주세요');
+            return false;
         }
+        return true;
     };
 
     const onUploadWrite = async (callback) => {
@@ -56,7 +60,9 @@ function WriteComponent() {
         // const type = JSON.stringify('post');
         // json으로 변환한 뒤에 객체로 만들면 배드 리퀘스트 뜸
         // 객체로 만들어서 data로 묶은 다음에 json으로 만들어야함
-        checkPostSubmit();
+        if (!checkPostSubmit()) {
+            return; // 조건이 충족되지 않으면 함수 종료
+        }
         console.log('type확인 :' + type);
         const data = {
             title: title,
