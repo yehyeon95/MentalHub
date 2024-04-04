@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatDate } from '../util/util';
 import { fetchCommentDelete, fetchCommentEdit } from '../util/fetchComment';
 import { Modal, Button } from 'react-bootstrap';
-
+import Ripply from './ripply';
+import RipplyWrite from './ripplyWrite';
 function Comment({ commentData }) {
     const [editIndex, setEditIndex] = useState(null); // 수정 중인 댓글의 인덱스를 저장하는 상태
     const [editComment, setEditComment] = useState('');
     const [showDelModal, setShowDelModal] = useState(false);
 
+    // useEffect(() => {
+    //     console.log(commentData);
+    //     console.log('대댓글 :', commentData[0].replies);
+    // }, []);
     const handleCancelEdit = () => {
         setEditIndex(null);
         setEditComment('');
@@ -26,7 +31,7 @@ function Comment({ commentData }) {
         const num = commentData[index].commentId;
 
         if (editComment.trim() === '') {
-            alert('수정할 내용을 입력해주세요.');
+            alert('수정 내용을 입력해주세요.');
             return;
         }
 
@@ -75,21 +80,21 @@ function Comment({ commentData }) {
                         <div className="">
                             <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center">
-                                    <small className="m-0 me-3">작성자: {comment.memberId}</small>
+                                    <small className="m-0 me-3">작성자: {comment.nickname}</small>
                                     <small className="text-muted">작성시간: {formatDate(comment.created_at)}</small>
                                 </div>
                                 {comment.memberId == sessionStorage.getItem('memberId') && !comment.deleted && (
                                     <div className="d-flex">
                                         <button
                                             type="button"
-                                            className="btn btn-primary btn-sm me-2"
+                                            className="btn btn-link btn-sm me-2"
                                             onClick={() => handleGoEdit(index)}
                                         >
                                             수정
                                         </button>
                                         <button
                                             type="button"
-                                            className="btn btn-secondary btn-sm"
+                                            className="btn btn-link btn-sm"
                                             onClick={() => handleGoDelete(index)}
                                         >
                                             삭제
@@ -97,7 +102,6 @@ function Comment({ commentData }) {
                                     </div>
                                 )}
                             </div>
-                            {/* 댓글 내용 또는 수정 폼 */}
                             {editIndex === index ? (
                                 <div>
                                     <textarea
@@ -123,6 +127,8 @@ function Comment({ commentData }) {
                             )}
                         </div>
                     </div>
+                    <Ripply ripply={comment.replies} />
+                    <RipplyWrite contentId={comment.contentId} commentId={comment.commentId} />
                 </div>
             ))}
             <Modal show={showDelModal} onHide={handleCancelDelete}>
