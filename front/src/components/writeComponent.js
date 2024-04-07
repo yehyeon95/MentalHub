@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Editor as Writer } from '@toast-ui/react-editor';
 import { fetchBoardWrite } from '../util/fetchBoard';
+import { fetchUploadImage } from '../util/fetchFile';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; //부트스트랩을 따로 npm 으로 다운받았는데 왜 이걸 다시 써야하는지 모르겠음 이걸 써야지 드롭다운 메뉴가 열림
 
 function WriteComponent() {
@@ -52,6 +53,15 @@ function WriteComponent() {
             return false;
         }
         return true;
+    };
+
+    const onUploadImage = async (blob, callback) => {
+        await fetchUploadImage(blob).then((data) => {
+            console.log(data);
+            //{imageUrl: 'https://mentalhub1.s3.ap-northeast-2.amazonaws.com/%EB%A1%9C%EA%B3%A0.png'}
+            callback(data.imageUrl);
+        });
+        return false;
     };
 
     const onUploadWrite = async (callback) => {
@@ -137,6 +147,9 @@ function WriteComponent() {
                         useCommandShortcut={true} // 단축키 사용 설정
                         ref={editorRef} // 에디터 ref 설정
                         //onChange={onChangeHandle} // 변경 핸들러 설정
+                        hooks={{
+                            addImageBlobHook: onUploadImage,
+                        }}
                         toolbarItems={[
                             ['heading', 'bold', 'strike'],
                             ['hr', 'quote'],

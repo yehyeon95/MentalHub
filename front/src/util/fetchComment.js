@@ -16,6 +16,7 @@ export const fetchCommentWrite = async (data) => {
                 throw Error('could not fetch the data for that resource');
             }
             if (res.ok) {
+                //console.log(res);
                 alert('댓글 작성성공');
             }
             return res;
