@@ -45,7 +45,7 @@ public class MemberService {
     }
 
     public Member createMember(Member member){
-        verifyEmail(member.getEmail());
+
         checkEmail(member.getEmail());
 
         Member member1 = new Member();
@@ -112,13 +112,13 @@ public class MemberService {
     private void verifyEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
         if(member.isPresent())
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+            throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_EXIST);
     }
 
     private void checkEmail(String email){
         Boolean isExist = memberRepository.existsByEmail(email);
         if(isExist)
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+            throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_EXIST);
     }
 
     public boolean duplicateEmail(String email){

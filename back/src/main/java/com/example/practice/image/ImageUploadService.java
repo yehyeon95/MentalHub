@@ -22,7 +22,7 @@ public class ImageUploadService {
         this.amazonS3Client = amazonS3Client;
     }
 
-    public String imageUpload(MultipartFile file) throws IOException {
+    public ImageResponseDto imageUpload(MultipartFile file) throws IOException {
         String fileName = getFileName(file);
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -32,7 +32,9 @@ public class ImageUploadService {
         amazonS3Client.putObject(new PutObjectRequest(
                 bucket, fileName, file.getInputStream(), metadata
         ));
-        return String.valueOf(amazonS3Client.getUrl(bucket, fileName));
+        ImageResponseDto imageResponseDto = new ImageResponseDto();
+        imageResponseDto.setImageUrl(String.valueOf(amazonS3Client.getUrl(bucket, fileName)));
+        return imageResponseDto;
     }
 
     private String getFileName(MultipartFile file) {

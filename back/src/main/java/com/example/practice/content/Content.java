@@ -3,6 +3,7 @@ package com.example.practice.content;
 import com.example.practice.comment.Comment;
 import com.example.practice.member.Member;
 import com.example.practice.reply.Reply;
+import com.example.practice.vote.contentvote.ContentVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -69,6 +70,8 @@ public class Content {
 
     @Column(updatable = true, unique = false, name = "modified")
     private boolean Modified;
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
+    private List<ContentVote> ContentVotes;
 
     public Content(String title, String body){
         this.title = title;
