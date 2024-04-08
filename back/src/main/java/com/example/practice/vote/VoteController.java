@@ -1,6 +1,8 @@
 package com.example.practice.vote;
 
 import com.example.practice.member.memberDto.duplicate.MemberNickname;
+import com.example.practice.vote.commentvote.CommentVoteDto;
+import com.example.practice.vote.commentvote.CommentVoteResponseDto;
 import com.example.practice.vote.contentvote.ContentVoteDto;
 import com.example.practice.vote.contentvote.ContentVoteResponseDto;
 import jakarta.validation.Valid;
@@ -32,6 +34,19 @@ public class VoteController {
     public ResponseEntity deleteContentVote(@Valid @RequestBody ContentVoteDto contentVoteDto,
                                             Authentication authentication){
         voteService.deleteContentVote(authentication, contentVoteDto.getContentId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @PostMapping("/comments")
+    public ResponseEntity postContentVote(@Valid @RequestBody CommentVoteDto commentVoteDto,
+                                          Authentication authentication){
+        CommentVoteResponseDto response = voteService.CreateCommentVote(authentication, commentVoteDto.getCommentId());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @DeleteMapping("/comments")
+    public ResponseEntity deleteContentVote(@Valid @RequestBody CommentVoteDto commentVoteDto,
+                                            Authentication authentication){
+        voteService.deleteCommentVote(authentication, commentVoteDto.getCommentId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

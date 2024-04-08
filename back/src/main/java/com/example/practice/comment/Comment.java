@@ -3,6 +3,7 @@ package com.example.practice.comment;
 import com.example.practice.content.Content;
 import com.example.practice.member.Member;
 import com.example.practice.reply.Reply;
+import com.example.practice.vote.commentvote.CommentVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -49,6 +50,9 @@ public class Comment {
     private long votes;
     @Column(updatable = true, unique = false, name = "deleted")
     private boolean deleted;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentVote> CommentVotes;
 
     public Comment(String commentBody){
         this.commentBody = commentBody;
