@@ -1,5 +1,6 @@
 package com.example.practice.global.security.jwt;
 
+import com.example.practice.global.enumclass.Role;
 import com.example.practice.global.security.dto.CustomUserDetails;
 import com.example.practice.member.Member;
 import jakarta.servlet.FilterChain;
@@ -54,7 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         //토큰에서 username과 role 획득
         String email = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        Role role = jwtUtil.getRole(token);
         long memberId = jwtUtil.getMemberId(token);
 
         //userEntity를 생성하여 값 set

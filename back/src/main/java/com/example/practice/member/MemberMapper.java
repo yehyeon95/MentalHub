@@ -17,7 +17,7 @@ public class MemberMapper {
                 member.getMemberId(),
                 member.getEmail(),
                 member.getNickname(),
-                member.getRole());
+                member.getRole().name());
     }
 
 }

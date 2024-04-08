@@ -1,6 +1,7 @@
 package com.example.practice.member;
 
 import com.example.practice.content.Content;
+import com.example.practice.global.enumclass.Role;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.memberDto.MemberInterface;
@@ -52,7 +53,7 @@ public class MemberService {
         member1.setEmail(member.getEmail());
         member1.setNickname(member.getNickname());
         member1.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
-        member1.setRole("USER");
+        member1.setRole(Role.USER);
         //초기 ADMIN은 환경변수로 하나만 설정
 
         Member savedMember = memberRepository.save(member1);
@@ -149,7 +150,7 @@ public class MemberService {
 
     public boolean checkRole(long memberId){
         Member member = findVerifiedMember(memberId);
-        String memberRole = member.getRole();
+        String memberRole = member.getRole().name();
 
         boolean result;
         if(memberRole=="ADMIN"){
@@ -163,7 +164,7 @@ public class MemberService {
 
     public Member changeRole(long memberId){
         Member member = em.find(Member.class, memberId);
-        member.setRole("ADMIN");
+        member.setRole(Role.ADMIN);
 
         return memberRepository.save(member);
     }

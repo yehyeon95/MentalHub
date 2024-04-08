@@ -2,6 +2,7 @@ package com.example.practice.member;
 
 import com.example.practice.comment.Comment;
 import com.example.practice.content.Content;
+import com.example.practice.global.enumclass.Role;
 import com.example.practice.reply.Reply;
 import com.example.practice.vote.contentvote.ContentVote;
 import jakarta.persistence.*;
@@ -40,8 +41,9 @@ public class Member {
     @Column(updatable = true, unique = false, name = "created_at")
     private LocalDateTime created_at;
 
-    @Column(nullable = true, updatable = true, unique = false, name = "role")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = true, unique = false, name = "role")
+    private Role role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Content> contents;
@@ -62,7 +64,7 @@ public class Member {
         this.nickname = nickname;
         this.password = password;
     }
-    public Member(Long memberId, String email, String nickname, String role){
+    public Member(Long memberId, String email, String nickname, Role role){
         this.memberId = memberId;
         this.email = email;
         this.nickname = nickname;
