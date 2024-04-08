@@ -10,6 +10,8 @@ import com.example.practice.member.memberDto.MemberResponseDto;
 import com.example.practice.member.memberDto.duplicate.MemberNickname;
 import com.example.practice.member.memberDto.duplicate.MemberPassword;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -22,20 +24,14 @@ import java.util.Optional;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberMapper memberMapper;
     private final EntityManager em;
-    public MemberService(MemberRepository memberRepository,
-                         BCryptPasswordEncoder bCryptPasswordEncoder,
-                         EntityManager em,
-                         MemberMapper memberMapper){
-        this.memberRepository = memberRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.em = em;
-        this.memberMapper = memberMapper;
-    }
+    @Value("${mail.address.admin}")
+    private String adminMailAddress;
 
     //principal에서 memberId 추출
     public long extractMemberId(Authentication authentication){
@@ -54,6 +50,11 @@ public class MemberService {
         member1.setNickname(member.getNickname());
         member1.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member1.setRole(Role.USER);
+
+        if(member.getEmail()==adminMailAddress){
+            member1.setRole(Role.ADMIN);
+        }
+        
         //초기 ADMIN은 환경변수로 하나만 설정
 
         Member savedMember = memberRepository.save(member1);
