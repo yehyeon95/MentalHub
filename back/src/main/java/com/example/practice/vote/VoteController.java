@@ -5,6 +5,8 @@ import com.example.practice.vote.commentvote.CommentVoteDto;
 import com.example.practice.vote.commentvote.CommentVoteResponseDto;
 import com.example.practice.vote.contentvote.ContentVoteDto;
 import com.example.practice.vote.contentvote.ContentVoteResponseDto;
+import com.example.practice.vote.replyvote.ReplyVoteDto;
+import com.example.practice.vote.replyvote.ReplyVoteResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,16 +39,29 @@ public class VoteController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PostMapping("/comments")
-    public ResponseEntity postContentVote(@Valid @RequestBody CommentVoteDto commentVoteDto,
+    public ResponseEntity postCommentVote(@Valid @RequestBody CommentVoteDto commentVoteDto,
                                           Authentication authentication){
         CommentVoteResponseDto response = voteService.CreateCommentVote(authentication, commentVoteDto.getCommentId());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @DeleteMapping("/comments")
-    public ResponseEntity deleteContentVote(@Valid @RequestBody CommentVoteDto commentVoteDto,
+    public ResponseEntity deleteCommentVote(@Valid @RequestBody CommentVoteDto commentVoteDto,
                                             Authentication authentication){
         voteService.deleteCommentVote(authentication, commentVoteDto.getCommentId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @PostMapping("/replies")
+    public ResponseEntity postReplyVote(@Valid @RequestBody ReplyVoteDto replyVoteDto,
+                                        Authentication authentication){
+        ReplyVoteResponseDto response = voteService.CreateReplyVote(authentication, replyVoteDto.getReplyId());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @DeleteMapping("/replies")
+    public ResponseEntity deleteReplyVote(@Valid @RequestBody ReplyVoteDto replyVoteDto,
+                                            Authentication authentication){
+        voteService.deleteReplyVote(authentication, replyVoteDto.getReplyId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

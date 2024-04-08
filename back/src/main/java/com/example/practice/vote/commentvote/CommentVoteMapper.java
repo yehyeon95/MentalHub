@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class CommentVoteMapper {
     public CommentVoteResponseDto commentVoteToResponse(CommentVote commentVote){
         return new CommentVoteResponseDto(
-                commentVote.getCommentVoteId(),
                 commentVote.getMember().getMemberId(),
                 commentVote.getComment().getCommentId());
     }

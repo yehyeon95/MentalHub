@@ -52,7 +52,7 @@ public class Comment {
     private boolean deleted;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    private List<CommentVote> CommentVotes;
+    private List<CommentVote> commentVotes;
 
     public Comment(String commentBody){
         this.commentBody = commentBody;

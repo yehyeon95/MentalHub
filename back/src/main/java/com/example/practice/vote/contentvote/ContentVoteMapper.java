@@ -9,7 +9,6 @@ public class ContentVoteMapper {
 
     public ContentVoteResponseDto contentVoteToResponse(ContentVote contentVote){
         return new ContentVoteResponseDto(
-                contentVote.getContentVoteId(),
                 contentVote.getMember().getMemberId(),
                 contentVote.getContent().getContentId());
     }

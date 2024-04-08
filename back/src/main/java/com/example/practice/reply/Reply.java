@@ -3,6 +3,8 @@ package com.example.practice.reply;
 import com.example.practice.comment.Comment;
 import com.example.practice.content.Content;
 import com.example.practice.member.Member;
+import com.example.practice.vote.commentvote.CommentVote;
+import com.example.practice.vote.replyvote.ReplyVote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +14,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -49,6 +52,9 @@ public class Reply {
     private long votes;
     @Column(updatable = true, unique = false, name = "deleted")
     private boolean deleted;
+
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL)
+    private List<ReplyVote> replyVotes;
 
     public Reply(String replyBody){
         this.replyBody = replyBody;

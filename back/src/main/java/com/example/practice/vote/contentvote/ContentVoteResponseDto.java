@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ContentVoteResponseDto {
-    private long contentVoteId;
     private long memberId;
     private long contentId;
 
