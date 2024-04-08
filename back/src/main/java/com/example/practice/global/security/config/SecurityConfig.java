@@ -60,8 +60,9 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth)->auth
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/members/**","/contents/**","/comments/**","/replies/**","/login","/image","/votes/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);

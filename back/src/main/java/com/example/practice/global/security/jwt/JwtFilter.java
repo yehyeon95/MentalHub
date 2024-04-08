@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class JwtFilter extends OncePerRequestFilter {
+    @Value("${mail.address.admin}")
+    private String adminMailAddress;
     private final JwtUtil jwtUtil;
 
     public JwtFilter(JwtUtil jwtUtil) {
@@ -55,14 +58,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         //토큰에서 username과 role 획득
         String email = jwtUtil.getUsername(token);
-        Role role = jwtUtil.getRole(token);
+        String role = jwtUtil.getRole(token);
         long memberId = jwtUtil.getMemberId(token);
+
+        Role enumTypeRole = Role.valueOf(role);
 
         //userEntity를 생성하여 값 set
         Member memberEntity = new Member();
         memberEntity.setEmail(email);
         memberEntity.setPassword("temppassword");
-        memberEntity.setRole(role);
+        memberEntity.setRole(enumTypeRole);
         memberEntity.setMemberId(memberId);
 
         //UserDetails에 회원 정보 객체 담기

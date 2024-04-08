@@ -76,7 +76,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader("Authorization", "Bearer " + token);
         try {
-            response.getWriter().println(gson.toJson(new LoginResponseDto(memberId)));
+            response.getWriter().println(gson.toJson(new LoginResponseDto(memberId,role)));
         } catch (IOException e) {
 
         }

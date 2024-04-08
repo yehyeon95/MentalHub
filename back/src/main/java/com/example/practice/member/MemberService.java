@@ -152,13 +152,11 @@ public class MemberService {
         Member member = findVerifiedMember(memberId);
         String memberRole = member.getRole().name();
 
-        boolean result;
+        boolean result = false;
         if(memberRole=="ADMIN"){
             result = true;
         }
-        else {
-            result = false;
-        }
+
         return result;
     }
 

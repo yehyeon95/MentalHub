@@ -37,6 +37,9 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+mail:
+  address:
+    admin: gustn5309@naver.com
 
     #sever:
 
