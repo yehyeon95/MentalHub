@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { formatDate } from '../util/util';
 import { fetchCommentDelete, fetchCommentEdit } from '../util/fetchComment';
+import { fetchUpVoteComment, fetchDownVoteComment } from '../util/fetchVote';
 import { Modal, Button } from 'react-bootstrap';
-import Ripply from './ripply';
-import RipplyWrite from './ripplyWrite';
+import { BsHandThumbsUp, BsHandThumbsUpFill } from 'react-icons/bs';
+import Reply from './reply';
+import ReplyWrite from './replyWrite';
 function Comment({ commentData }) {
     const [editIndex, setEditIndex] = useState(null); // 수정 중인 댓글의 인덱스를 저장하는 상태
     const [editComment, setEditComment] = useState('');
@@ -71,6 +73,27 @@ function Comment({ commentData }) {
         });
     };
 
+    const handleUpVote = async (index) => {
+        const data = {
+            commentId: commentData[index].contentId,
+        };
+        let path = await fetchUpVoteComment(JSON.stringify(data)).then((data) => {
+            console.log('추천', data);
+            alert('추천되었습니다.');
+            window.location.reload();
+        });
+    };
+    const handleDownVote = async (index) => {
+        const data = {
+            commentId: commentData[index].contentId,
+        };
+        let path = await fetchDownVoteComment(JSON.stringify(data)).then((data) => {
+            console.log('비추천', data);
+            alert('추천이해제되었습니다.');
+            window.location.reload();
+        });
+    };
+
     return (
         <div>
             <p>댓글 : {commentData.length}</p>
@@ -121,14 +144,26 @@ function Comment({ commentData }) {
                                     </button>
                                 </div>
                             ) : (
-                                <h6 className="card-text" style={{ fontSize: '14px' }}>
+                                <h6 className="card-text mt-4" style={{ fontSize: '14px' }}>
                                     {comment.commentBody}
                                 </h6>
                             )}
                         </div>
+                        {sessionStorage.getItem('memberId') && (
+                            <div className="mb-1 mx-4 d-flex justify-content-end" style={{ color: '#0d6efd' }}>
+                                {!comment.voted ? (
+                                    <BsHandThumbsUp style={{ cursor: 'pointer' }} onClick={() => handleUpVote(index)} />
+                                ) : (
+                                    <BsHandThumbsUpFill
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => handleDownVote(index)}
+                                    />
+                                )}
+                            </div>
+                        )}
                     </div>
-                    <Ripply ripply={comment.replies} />
-                    <RipplyWrite contentId={comment.contentId} commentId={comment.commentId} />
+                    <Reply reply={comment.replies} />
+                    <ReplyWrite contentId={comment.contentId} commentId={comment.commentId} />
                 </div>
             ))}
             <Modal show={showDelModal} onHide={handleCancelDelete}>

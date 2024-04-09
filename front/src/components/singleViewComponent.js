@@ -3,19 +3,29 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchSinglePost, fetchPostDelete } from '../util/fetchBoard';
+import { fetchSinglePost, fetchSinglePostLogin, fetchPostDelete } from '../util/fetchBoard';
+import { fetchUpVote, fetchDownVote } from '../util/fetchVote';
 import { formatDate } from '../util/util';
+import { BsHandThumbsUp, BsHandThumbsUpFill } from 'react-icons/bs';
 import Comment from './comment';
 import CommentWrite from './commentWrite';
+
 function SingleViewComponent() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [postData, setPostData] = useState('');
     const [contentId, setContentId] = useState('');
     const [commentData, setCommentData] = useState([]);
+    const [voteBtn, setVoteBtn] = useState(false);
+
     useEffect(() => {
-        getSingleView();
+        if (!sessionStorage.getItem('memberId')) {
+            getSingleView();
+        } else {
+            getSingleViewLogin();
+        }
     }, []);
+
     const getSingleView = async (callback) => {
         let path = await fetchSinglePost(id).then((data) => {
             setPostData(data.contentResponseDto);
@@ -23,6 +33,16 @@ function SingleViewComponent() {
             setContentId(data.contentResponseDto.contentId);
             setCommentData(data.commentsList);
             //console.log(postData.memberId == sessionStorage.getItem('memberId'));
+            console.log(data.contentResponseDto);
+        });
+    };
+
+    const getSingleViewLogin = async (callback) => {
+        let path = await fetchSinglePostLogin(id).then((data) => {
+            setPostData(data.contentResponseDto);
+            setContentId(data.contentResponseDto.contentId);
+            setCommentData(data.commentsList);
+            console.log(data.contentResponseDto);
         });
     };
 
@@ -40,6 +60,27 @@ function SingleViewComponent() {
     const modi = postData.modified;
     const formattedModDate = formatDate(postData.modifiedAt);
     const formattedCreDate = formatDate(postData.createdAt);
+
+    const handleUpVote = async (callback) => {
+        const data = {
+            contentId: id,
+        };
+        let path = await fetchUpVote(JSON.stringify(data)).then((data) => {
+            console.log('추천', data);
+            alert('추천되었습니다.');
+            window.location.reload();
+        });
+    };
+    const handleDownVote = async (callback) => {
+        const data = {
+            contentId: id,
+        };
+        let path = await fetchDownVote(JSON.stringify(data)).then((data) => {
+            console.log('비추천', data);
+            alert('추천이해제되었습니다.');
+            window.location.reload();
+        });
+    };
 
     return (
         <div className="container mt-4">
@@ -62,6 +103,16 @@ function SingleViewComponent() {
                                 ? '공지게시글'
                                 : ''}
                         </p>
+                        {postData.memberId == sessionStorage.getItem('memberId') && (
+                            <div className="mb-4">
+                                <button type="button" className="btn btn-link" onClick={handleGoUpdate}>
+                                    수정하기
+                                </button>
+                                <button type="button" className="btn btn-link mx-4" onClick={handleGoDelete}>
+                                    삭제하기
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <div className="mb-4">
                         {postData.body && (
@@ -74,14 +125,19 @@ function SingleViewComponent() {
                             />
                         )}
                     </div>
-                    {postData.memberId == sessionStorage.getItem('memberId') && (
-                        <div className="mb-4">
-                            <button type="button" className="btn btn-primary" onClick={handleGoUpdate}>
-                                수정하기
-                            </button>
-                            <button type="button" className="btn btn-secondary mx-4" onClick={handleGoDelete}>
-                                삭제하기
-                            </button>
+                    {sessionStorage.getItem('memberId') && (
+                        <div className="mb-4 d-flex justify-content-center" style={{ color: '#0d6efd' }}>
+                            {!postData.voted ? (
+                                <BsHandThumbsUp
+                                    style={{ fontSize: '2rem', cursor: 'pointer' }}
+                                    onClick={handleUpVote}
+                                />
+                            ) : (
+                                <BsHandThumbsUpFill
+                                    style={{ fontSize: '2rem', cursor: 'pointer' }}
+                                    onClick={handleDownVote}
+                                />
+                            )}
                         </div>
                     )}
                     <Comment commentData={commentData} />

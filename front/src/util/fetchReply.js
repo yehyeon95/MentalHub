@@ -2,7 +2,7 @@
  * 리플작성
  */
 
-export const fetchRipplyWrite = async (data) => {
+export const fetchReplyWrite = async (data) => {
     return fetch('/replies', {
         method: 'POST',
         headers: {
@@ -28,7 +28,7 @@ export const fetchRipplyWrite = async (data) => {
 /**
  * 리플수정
  */
-export const fetchRipplyEdit = async (data, num) => {
+export const fetchReplyEdit = async (data, num) => {
     return fetch(`/replies/${num}`, {
         method: 'PATCH',
         headers: {
@@ -54,7 +54,7 @@ export const fetchRipplyEdit = async (data, num) => {
  * 리플삭제
  */
 
-export const fetchRipplyDelete = async (data, num) => {
+export const fetchReplyDelete = async (data, num) => {
     return fetch(`/replies/${num}`, {
         method: 'DELETE',
         headers: {
