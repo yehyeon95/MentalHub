@@ -29,7 +29,7 @@ export const fetchBoardWrite = async (data) => {
 };
 
 /**
- * 단일게시물 조회
+ * 단일게시물 조회(비로그인시)
  */
 
 export const fetchSinglePost = async (id) => {
@@ -38,6 +38,36 @@ export const fetchSinglePost = async (id) => {
         headers: {
             'content-type': 'application/json;charset=UTF-8',
             'ngrok-skip-browser-warning': '69420',
+        },
+    })
+        .then((res) => {
+            if (!res.ok) {
+                throw Error('유효하지 않은 요청이다.');
+            }
+            if (res.ok) {
+                //console.log('단일 게시물 조회 성공');
+                return res.json();
+            }
+        })
+        .then((data) => {
+            return data;
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
+
+/**
+ * 단일게시물 조회(로그인시)
+ */
+
+export const fetchSinglePostLogin = async (id) => {
+    return fetch(`/contents/${id}/login`, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            'ngrok-skip-browser-warning': '69420',
+            authorization: sessionStorage.getItem('access_token'),
         },
     })
         .then((res) => {
