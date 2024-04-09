@@ -75,6 +75,20 @@ public class ContentController {
 
         return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
     }
+    @GetMapping("/{contentId}")
+    public ResponseEntity getContentLogin(@PathVariable("contentId") long contentId,
+                                          Authentication authentication){
+        ContentResponseDto response = contentService.getContent(contentId);
+
+        List<Comment> findComments = contentService.findVerifyComments(contentId);
+
+        List<CommentResponseDto> findCommentsList =
+                findComments.stream()
+                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment)))
+                        .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
+    }
 
     @GetMapping
     public ResponseEntity getAllContents(@RequestParam("page") @Positive int page,

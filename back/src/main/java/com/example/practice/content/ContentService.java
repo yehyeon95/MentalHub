@@ -94,6 +94,7 @@ public class ContentService {
         Optional<Content> optionalContent = contentRepository.findById(contentId);
         Content content = optionalContent.get();
 
+
         long views = content.getViews();
         long add = views + 1;
 
@@ -101,7 +102,28 @@ public class ContentService {
 
         Content savedContent = contentRepository.save(content);
 
-        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedContent, getCommentsCount(savedContent.getContentId()),getContentVotesCount(savedContent.getContentId()));
+        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedContent, getCommentsCount(savedContent.getContentId()),
+                getContentVotesCount(savedContent.getContentId()),false);
+
+        return result;
+    }
+    public ContentResponseDto getContentLogin(long contentId, Authentication authentication){
+
+        Optional<Content> optionalContent = contentRepository.findById(contentId);
+        Content content = optionalContent.get();
+
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        long views = content.getViews();
+        long add = views + 1;
+
+        content.setViews(add);
+
+        Content savedContent = contentRepository.save(content);
+
+        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedContent, getCommentsCount(savedContent.getContentId()),
+                getContentVotesCount(savedContent.getContentId()),checkMemberContentVoted(member, savedContent));
 
         return result;
     }
