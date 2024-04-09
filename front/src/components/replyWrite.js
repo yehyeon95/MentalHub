@@ -1,28 +1,28 @@
 import { useState } from 'react';
-import { fetchRipplyWrite } from '../util/fetchRipple';
-function RipplyWrite({ contentId, commentId }) {
-    const [ripplyBody, setRipplyBody] = useState('');
+import { fetchReplyWrite } from '../util/fetchReply';
+function ReplyWrite({ contentId, commentId }) {
+    const [replyBody, setReplyBody] = useState('');
     const [showReplyForm, setShowReplyForm] = useState(false);
 
     const toggleReplyForm = () => {
         setShowReplyForm(!showReplyForm);
     };
     const handleChange = (e) => {
-        setRipplyBody(e.target.value);
+        setReplyBody(e.target.value);
     };
 
     const handleSubmit = async (callback) => {
-        if (!ripplyBody) {
+        if (!replyBody) {
             alert('내용을 입력해주세요');
             return;
         }
         const data = {
-            replyBody: ripplyBody,
+            replyBody: replyBody,
             contentId: contentId,
             commentId: commentId,
         };
         console.log(data);
-        let path = await fetchRipplyWrite(JSON.stringify(data)).then((data) => {
+        let path = await fetchReplyWrite(JSON.stringify(data)).then((data) => {
             if (data) {
                 console.log(data);
             }
@@ -56,4 +56,4 @@ function RipplyWrite({ contentId, commentId }) {
     );
 }
 
-export default RipplyWrite;
+export default ReplyWrite;

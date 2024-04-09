@@ -4,8 +4,8 @@ import { fetchCommentDelete, fetchCommentEdit } from '../util/fetchComment';
 import { fetchUpVoteComment, fetchDownVoteComment } from '../util/fetchVote';
 import { Modal, Button } from 'react-bootstrap';
 import { BsHandThumbsUp, BsHandThumbsUpFill } from 'react-icons/bs';
-import Ripply from './ripply';
-import RipplyWrite from './ripplyWrite';
+import Reply from './reply';
+import ReplyWrite from './replyWrite';
 function Comment({ commentData }) {
     const [editIndex, setEditIndex] = useState(null); // 수정 중인 댓글의 인덱스를 저장하는 상태
     const [editComment, setEditComment] = useState('');
@@ -162,8 +162,8 @@ function Comment({ commentData }) {
                             </div>
                         )}
                     </div>
-                    <Ripply ripply={comment.replies} />
-                    <RipplyWrite contentId={comment.contentId} commentId={comment.commentId} />
+                    <Reply reply={comment.replies} />
+                    <ReplyWrite contentId={comment.contentId} commentId={comment.commentId} />
                 </div>
             ))}
             <Modal show={showDelModal} onHide={handleCancelDelete}>
