@@ -234,7 +234,12 @@ function JoinComponent() {
                         placeholder="* 닉네임"
                     ></input>
                     {errorUserName && <p className="text-danger">닉네임을 작성해주세요</p>}
-                    <button type="button" onClick={handleUserNameDuplicationCheck} className="btn btn-secondary mb-2">
+                    {duplicationUserName && <p className="text-success">이메일 중복 검사 통과</p>}
+                    <button
+                        type="button"
+                        onClick={handleUserNameDuplicationCheck}
+                        className="btn btn-secondary mb-2 mt-2"
+                    >
                         닉네임 중복검사
                     </button>
                 </div>

@@ -92,7 +92,33 @@ export const fetchPostsList = async (page, filter) => {
             throw Error(err.message);
         });
 };
+/**
+ * 목록 공지 조회
+ */
 
+export const fetchPostsNotiList = async (page) => {
+    return fetch(`/contents?page=1&size=20&type=notice`, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            'ngrok-skip-browser-warning': '69420',
+        },
+    })
+        .then((res) => {
+            if (!res.ok) {
+                console.log('실패:' + res);
+                throw Error('유효하지 않은 요청입니다.');
+            }
+            if (res.ok) {
+                //console.log('단일 게시물 조회 성공');
+                console.log('성공:' + res);
+                return res.json();
+            }
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
 /**
  * 게시글 수정
  */

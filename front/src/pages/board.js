@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { fetchPostsList } from '../util/fetchBoard';
+import { fetchPostsList, fetchPostsNotiList } from '../util/fetchBoard';
 import CardComponent from '../components/card';
 import Pagination from '../components/pagination';
 //외부라이브러리 사용시에는 중괄호를 써주고 같은 프로젝트 내에 있으면 중괄호 안씀
@@ -9,7 +9,9 @@ import Loading from '../components/loading';
 const Board = () => {
     const navigate = useNavigate();
     const [postsList, setPostsList] = useState([]);
+    const [notiList, setNotiList] = useState([]);
     const [pageInfo, setPageInfo] = useState({});
+    const [notiInfo, setNotiInfo] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [currentFilter, setCurrentFilter] = useState('post');
     const [search, setSearch] = useState(''); //header에서 검색어를 작성하면, 이벤트를 통해서 세션에 검색어를 저장, 후에 여기서 가져와서 검색함
@@ -46,6 +48,12 @@ const Board = () => {
     useEffect(() => {
         if (isUpdate) {
             //fetchQuestionList(currentPage, currentFilter, searchText).then((res) => {
+            fetchPostsNotiList().then((res) => {
+                setNotiList(res.data);
+                setNotiInfo(res);
+                console.log('noti res', res);
+                console.log('noti res.data', res.data);
+            });
             fetchPostsList(currentPage, currentFilter).then((res) => {
                 setPostsList(res.data); //리스트 배열로 들어오는거 이름 맞추기
                 setPageInfo(res); //페이지 인포만 들어오는걸로 확인
@@ -95,15 +103,24 @@ const Board = () => {
                     >
                         정보
                     </button>
-                    <button
+                    {/* <button
                         type="button"
                         value="notice"
                         onClick={() => onFilterClick('notice')}
                         className={`btn ${currentFilter === 'notice' ? 'btn-primary' : 'btn-outline-primary'}`}
                     >
                         공지
-                    </button>
+                    </button> */}
                 </div>
+            </div>
+            <div className="container mx-auto">
+                {notiList && (
+                    <div className="questionList">
+                        {notiList.map((postsList) => (
+                            <CardComponent key={postsList.contentId} item={postsList} />
+                        ))}
+                    </div>
+                )}
             </div>
             <div className="container m-3 p-3 mx-auto">
                 {postsList && (

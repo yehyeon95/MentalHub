@@ -9,7 +9,13 @@ const CardComponent = (item) => {
     const formattedCreDate = formatDate(data.createdAt);
     return (
         <div className="">
-            <div className="container p-4 border text-md border-soGray-light my-4">
+            <div
+                className={
+                    data.type === 'notice'
+                        ? 'container p-4 border bg-info bg-opacity-25 font-weight-bold my-4'
+                        : 'container p-4 border text-md border-soGray-light my-4'
+                }
+            >
                 <div className="row"></div>
                 <div className="text-[1.2rem] line-clamp-2 break-all font-weight-bold mb-2">
                     <Link to={`/contents/${data.contentId}`}>{data.title}</Link>
