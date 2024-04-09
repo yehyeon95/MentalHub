@@ -11,7 +11,10 @@ import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.member.memberDto.MemberResponseDto;
 import com.example.practice.reply.ReplyRepository;
+import com.example.practice.vote.contentvote.ContentVote;
+import com.example.practice.vote.contentvote.ContentVoteRepository;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -24,6 +27,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ContentService {
     private final ContentMapper contentMapper;
     private final ContentRepository contentRepository;
@@ -31,20 +35,9 @@ public class ContentService {
     private final MemberService memberService;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
+    private final ContentVoteRepository contentVoteRepository;
 
-    public ContentService(ContentMapper contentMapper,
-                          ContentRepository contentRepository,
-                          EntityManager em,
-                          MemberService memberService,
-                          CommentRepository commentRepository,
-                          ReplyRepository replyRepository){
-        this.contentMapper = contentMapper;
-        this.contentRepository = contentRepository;
-        this.em = em;
-        this.memberService = memberService;
-        this.commentRepository = commentRepository;
-        this.replyRepository = replyRepository;
-    }
+
 
     public long extractMemberId(Authentication authentication){
         Object principal = authentication.getPrincipal();
@@ -66,15 +59,21 @@ public class ContentService {
         content.setTitle(contentPostDto.getTitle());
         content.setType(contentPostDto.getType());
         content.setModified(false);
-        //사진 첨부 기능 추가
 
         Content savedContent = contentRepository.save(content);
 
         return savedContent;
     }
 
-    public Content updateContent(long contentId, ContentPatchDto contentPatchDto){
+    public ContentResponseDto updateContent(long contentId, ContentPatchDto contentPatchDto, Authentication authentication){
         Content content = em.find(Content.class, contentId);
+
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        if(content.getMember().getMemberId()!=memberId){
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_WRITER);
+        }
 
         content.setFont(contentPatchDto.getFont());
         content.setFontSize(contentPatchDto.getFontSize());
@@ -83,7 +82,12 @@ public class ContentService {
         content.setType(contentPatchDto.getType());
         content.setModified(true);
 
-        return contentRepository.save(content);
+        Content savedContent = contentRepository.save(content);
+
+        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedContent,getCommentsCount(savedContent.getContentId()),
+                getContentVotesCount(savedContent.getContentId()),checkMemberContentVoted(member, savedContent));
+
+        return result;
     }
 
     public ContentResponseDto getContent(long contentId){
@@ -95,10 +99,9 @@ public class ContentService {
 
         content.setViews(add);
 
-        Content savedcontent = contentRepository.save(content);
+        Content savedContent = contentRepository.save(content);
 
-        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedcontent, savedcontent.getMember().getMemberId(), savedcontent.getMember().getNickname(),
-                getCommentsCount(savedcontent.getContentId()));
+        ContentResponseDto result = contentMapper.ContentToContentResponseDto(savedContent, getCommentsCount(savedContent.getContentId()),getContentVotesCount(savedContent.getContentId()));
 
         return result;
     }
@@ -146,6 +149,20 @@ public class ContentService {
         List<Comment> findComments = commentRepository.findAllByContent(content);
 
         return findComments;
+    }
+
+    //게시글 추천수 반환
+    public long getContentVotesCount(long contentId){
+        Content content = findVerifiedContent(contentId);
+        long contentVotesCnt = Long.valueOf(contentVoteRepository.countAllByContent(content));
+
+        return contentVotesCnt;
+    }
+    //유저가 게시글에 추천한 적이 있는지 확인
+    public boolean checkMemberContentVoted(Member member, Content content) {
+        boolean isExist = contentVoteRepository.existsByMemberAndContent(member, content);
+
+        return isExist;
     }
 
 

@@ -47,18 +47,19 @@ public class ContentController {
                                       Authentication authentication){
 
         Content content = contentService.createContent(authentication, contentPostDto);
-        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),content.getMember().getNickname(),0);
+        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content,0,0,false);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping("/{contentId}")
     public ResponseEntity patchContent(@PathVariable("contentId") long contentId,
-                                       @Valid @RequestBody ContentPatchDto contentPatchDto){
-        Content content = contentService.updateContent(contentId, contentPatchDto);
-        ContentResponseDto response = contentMapper.ContentToContentResponseDto(content, content.getMember().getMemberId(),content.getMember().getNickname(),contentService.getCommentsCount(contentId));
+                                       @Valid @RequestBody ContentPatchDto contentPatchDto,
+                                       Authentication authentication){
+        ContentResponseDto response = contentService.updateContent(contentId, contentPatchDto,authentication);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);//
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{contentId}")
@@ -87,7 +88,8 @@ public class ContentController {
 
         List<ContentResponseDto> response =
                 contents.stream()
-                        .map(content-> contentMapper.ContentToContentResponseDto(content,content.getMember().getMemberId(),content.getMember().getNickname(),contentService.getCommentsCount(content.getContentId())))
+                        .map(content-> contentMapper.ContentToContentResponseDto(content,contentService.getCommentsCount(content.getContentId()),
+                                contentService.getContentVotesCount(content.getContentId()),false))
                         .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ContentPageResponseDto(response, pageInfo), HttpStatus.OK);

@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface CommentVoteRepository extends JpaRepository<CommentVote, Long> {
     Optional<CommentVote> findByMemberAndComment(Member member, Comment comment);
+    long countAllByComment(Comment comment);
     Boolean existsByMemberAndComment(Member member, Comment comment);
 }

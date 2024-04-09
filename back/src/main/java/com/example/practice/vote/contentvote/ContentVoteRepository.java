@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface ContentVoteRepository extends JpaRepository<ContentVote, Long> {
     Optional<ContentVote> findByMemberAndContent(Member member, Content content);
+    long countAllByContent(Content content);
     Boolean existsByMemberAndContent(Member member, Content content);
 
 }

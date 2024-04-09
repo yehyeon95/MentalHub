@@ -12,19 +12,20 @@ import java.util.List;
 @Component
 public class ContentMapper {
 
-    public ContentResponseDto ContentToContentResponseDto(Content content, long memberId, String nickname, long commentsCount){
+    public ContentResponseDto ContentToContentResponseDto(Content content, long commentsCount, long contentVotes, boolean isVoted){
         return new ContentResponseDto(
                 content.getContentId(),
-                memberId,
-                nickname,
+                content.getMember().getMemberId(),
+                content.getMember().getNickname(),
                 content.getTitle(),
                 content.getBody(),
                 content.getFont(),
                 content.getFontSize(),
-                content.getImageLink(),
                 content.getCreatedAt(),
                 content.getModifiedAt(),
                 content.getViews(),
+                contentVotes,
+                isVoted,
                 content.getType(),
                 commentsCount,
                 content.isModified()

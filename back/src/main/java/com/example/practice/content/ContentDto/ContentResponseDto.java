@@ -20,11 +20,13 @@ public class ContentResponseDto {
     private String body;
     private String font;
     private long fontSize;
-    private String imageLink;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private long views;
+    private long contentVotes;
+    private boolean isVoted;
     private String type;
     private long commentsCount;
     private boolean Modified;
+
 }

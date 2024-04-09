@@ -45,9 +45,6 @@ public class Content {
     @Column(nullable = true, updatable = true, unique = false, name = "font_size")
     private long fontSize;
 
-    @Column(length = 200, nullable = true, updatable = true, unique = false, name = "image_link")
-    private String imageLink;
-
     @CreatedDate
     @Column(nullable = true, updatable = false, unique = false, name = "created_at")
     private LocalDateTime createdAt;

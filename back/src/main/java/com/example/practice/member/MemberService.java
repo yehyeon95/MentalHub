@@ -54,7 +54,7 @@ public class MemberService {
         if(member.getEmail()==adminMailAddress){
             member1.setRole(Role.ADMIN);
         }
-        
+
         //초기 ADMIN은 환경변수로 하나만 설정
 
         Member savedMember = memberRepository.save(member1);
