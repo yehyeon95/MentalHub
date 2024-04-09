@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class ReplyMapper {
-    public ReplyResponseDto ReplyToReplyResponseDto(Reply reply){
+    public ReplyResponseDto ReplyToReplyResponseDto(Reply reply, long replyVotesCnt, boolean isVoted){
         return new ReplyResponseDto(
                 reply.getReplyId(),
                 reply.getMember().getMemberId(),
@@ -19,7 +19,8 @@ public class ReplyMapper {
                 reply.getComment().getCommentId(),
                 reply.getReplyBody(), 
                 reply.getCreated_at(),
-                reply.getVotes(),
+                replyVotesCnt,
+                isVoted,
                 reply.isDeleted());
     }
 }

@@ -203,7 +203,7 @@ public class ContentService {
         List<CommentResponseDto> result =
                 commentList.stream()
                         .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment),
-                                voteService.countCommentVotes(comment), voteService.checkMemberCommentVoted(member, comment)))
+                                voteService.countCommentVotes(comment), voteService.checkMemberCommentVoted(member, comment),member))
                         .collect(Collectors.toList());
         return result;
     }

@@ -3,6 +3,7 @@ package com.example.practice.comment;
 import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.content.Content;
 import com.example.practice.content.ContentDto.ContentResponseDto;
+import com.example.practice.member.Member;
 import com.example.practice.reply.Reply;
 import com.example.practice.reply.ReplyMapper;
 import com.example.practice.reply.ReplyService;
@@ -19,7 +20,7 @@ public class CommentMapper {
     public CommentMapper(ReplyService replyService){
         this.replyService = replyService;
     }
-    public CommentResponseDto CommentToCommentResponseDto(Comment comment, List<Reply> replies, long commentVotesCnt, boolean isVoted){
+    public CommentResponseDto CommentToCommentResponseDto(Comment comment, List<Reply> replies, long commentVotesCnt, boolean isVoted, Member member){
         return new CommentResponseDto(
                 comment.getCommentId(),
                 comment.getMember().getMemberId(),
@@ -28,7 +29,7 @@ public class CommentMapper {
                 comment.getCreated_at(),
                 comment.getCommentBody(),
                 comment.isDeleted(),
-                replyService.mapReplies(replies),
+                replyService.replyListToReplyResponseList(replies,member),
                 commentVotesCnt,
                 isVoted);
     }

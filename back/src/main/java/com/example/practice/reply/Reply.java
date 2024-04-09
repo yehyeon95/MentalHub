@@ -49,7 +49,6 @@ public class Reply {
     @Column(updatable = true, unique = false, name = "created_at")
     private LocalDateTime created_at;
 
-    private long votes;
     @Column(updatable = true, unique = false, name = "deleted")
     private boolean deleted;
 

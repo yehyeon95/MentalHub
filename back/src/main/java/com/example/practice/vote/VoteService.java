@@ -176,9 +176,7 @@ public class VoteService {
                         new BusinessLogicException(ExceptionCode.VOTE_NOT_FOUND));
         return findReplyVote;
     }
-    public long countContentVotes(Content content){
-        return contentVoteRepository.countAllByContent(content);
-    }
+
 
     public long countCommentVotes(Comment comment){
         return commentVoteRepository.countAllByComment(comment);
@@ -189,6 +187,11 @@ public class VoteService {
 
     public boolean checkMemberCommentVoted(Member member, Comment comment) {
         boolean isExist = commentVoteRepository.existsByMemberAndComment(member, comment);
+
+        return isExist;
+    }
+    public boolean checkMemberReplyVoted(Member member, Reply reply) {
+        boolean isExist = replyVoteRepository.existsByMemberAndReply(member, reply);
 
         return isExist;
     }

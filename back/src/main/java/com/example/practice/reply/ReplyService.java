@@ -12,7 +12,9 @@ import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.reply.dto.ReplyPostDto;
 import com.example.practice.reply.dto.ReplyResponseDto;
+import com.example.practice.vote.VoteService;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ReplyService {
     private final EntityManager em;
     private final MemberService memberService;
@@ -29,20 +32,8 @@ public class ReplyService {
     private final CommentService commentService;
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
+    private final VoteService voteService;
 
-    public ReplyService(EntityManager em,
-                          MemberService memberService,
-                          ContentService contentService,
-                          ReplyRepository replyRepository,
-                        CommentService commentService,
-                        ReplyMapper replyMapper){
-        this.em = em;
-        this.memberService = memberService;
-        this.contentService = contentService;
-        this.replyRepository = replyRepository;
-        this.commentService = commentService;
-        this.replyMapper = replyMapper;
-    }
     public long extractMemberId(Authentication authentication){
         Object principal = authentication.getPrincipal();
         Member user = (Member) principal;
@@ -96,10 +87,10 @@ public class ReplyService {
         return replyRepository.save(reply);
     }
 
-    public List<ReplyResponseDto> mapReplies(List<Reply> replies){
+    public List<ReplyResponseDto> replyListToReplyResponseList(List<Reply> replies, Member member){
         List<ReplyResponseDto> resultReplies =
                 replies.stream()
-                        .map(reply-> replyMapper.ReplyToReplyResponseDto(reply))
+                        .map(reply-> replyMapper.ReplyToReplyResponseDto(reply, voteService.countReplyVotes(reply), voteService.checkMemberReplyVoted(member,reply)))
                         .collect(Collectors.toList());
         return resultReplies;
     }

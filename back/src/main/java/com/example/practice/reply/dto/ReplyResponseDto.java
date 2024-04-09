@@ -17,6 +17,7 @@ public class ReplyResponseDto {
     private long commentId;
     private String replyBody;
     private LocalDateTime created_at;
-    private long votes;
+    private long ReplyVotesCnt;
+    private boolean isVoted;
     private boolean deleted;
 }

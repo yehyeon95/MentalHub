@@ -66,7 +66,7 @@ public class ContentController {
 
         List<CommentResponseDto> findCommentsList =
                 findComments.stream()
-                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment), voteService.countCommentVotes(comment), false))
+                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment), voteService.countCommentVotes(comment),false,new Member()))
                         .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
