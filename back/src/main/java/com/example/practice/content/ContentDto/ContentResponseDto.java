@@ -23,7 +23,7 @@ public class ContentResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private long views;
-    private long contentVotes;
+    private long contentVotesCnt;
     private boolean isVoted;
     private String type;
     private long commentsCount;

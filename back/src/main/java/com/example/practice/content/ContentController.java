@@ -2,14 +2,17 @@ package com.example.practice.content;
 
 import com.example.practice.comment.Comment;
 import com.example.practice.comment.CommentMapper;
+import com.example.practice.comment.CommentService;
 import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.content.ContentDto.*;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
 import com.example.practice.member.memberDto.MemberPostDto;
 import com.example.practice.reply.ReplyRepository;
+import com.example.practice.vote.VoteService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,23 +28,16 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RequestMapping("/contents")
 @Validated
+@RequiredArgsConstructor
 public class ContentController {
 
     private final ContentMapper contentMapper;
     private final ContentService contentService;
     private final CommentMapper commentMapper;
     private final ReplyRepository replyRepository;
+    private final VoteService voteService;
 
 
-    public ContentController(ContentMapper contentMapper,
-                             ContentService contentService,
-                             ReplyRepository replyRepository,
-                             CommentMapper commentMapper){
-        this.contentMapper = contentMapper;
-        this.contentService = contentService;
-        this.replyRepository = replyRepository;
-        this.commentMapper = commentMapper;
-    }
     @PostMapping
     public ResponseEntity postContent(@Valid @RequestBody ContentPostDto contentPostDto,
                                       Authentication authentication){
@@ -70,22 +66,21 @@ public class ContentController {
 
         List<CommentResponseDto> findCommentsList =
                 findComments.stream()
-                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment)))
+                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment), voteService.countCommentVotes(comment), false))
                         .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
     }
-    @GetMapping("/{contentId}")
+    @GetMapping("/{contentId}/login")
     public ResponseEntity getContentLogin(@PathVariable("contentId") long contentId,
                                           Authentication authentication){
-        ContentResponseDto response = contentService.getContent(contentId);
+        ContentResponseDto response = contentService.getContentLogin(contentId,authentication);
 
         List<Comment> findComments = contentService.findVerifyComments(contentId);
 
-        List<CommentResponseDto> findCommentsList =
-                findComments.stream()
-                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment)))
-                        .collect(Collectors.toList());
+        //댓글 리스트를 댓글 리스폰스 리스트로 변환
+        List<CommentResponseDto> findCommentsList = contentService.commentListToCommentResponseList(findComments, authentication);
+
 
         return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
     }

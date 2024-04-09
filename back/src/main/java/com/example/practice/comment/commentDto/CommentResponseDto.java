@@ -24,5 +24,7 @@ public class CommentResponseDto {
     private String commentBody;
     private boolean deleted;
     private List<ReplyResponseDto> replies;
+    private long CommentVotesCnt;
+    private boolean isVoted;
 
 }

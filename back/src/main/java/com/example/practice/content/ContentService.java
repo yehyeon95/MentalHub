@@ -1,7 +1,10 @@
 package com.example.practice.content;
 
 import com.example.practice.comment.Comment;
+import com.example.practice.comment.CommentMapper;
 import com.example.practice.comment.CommentRepository;
+import com.example.practice.comment.CommentService;
+import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.content.ContentDto.ContentPatchDto;
 import com.example.practice.content.ContentDto.ContentPostDto;
 import com.example.practice.content.ContentDto.ContentResponseDto;
@@ -11,6 +14,7 @@ import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.member.memberDto.MemberResponseDto;
 import com.example.practice.reply.ReplyRepository;
+import com.example.practice.vote.VoteService;
 import com.example.practice.vote.contentvote.ContentVote;
 import com.example.practice.vote.contentvote.ContentVoteRepository;
 import jakarta.persistence.EntityManager;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,6 +39,9 @@ public class ContentService {
     private final EntityManager em;
     private final MemberService memberService;
     private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
+    private final CommentService commentService;
+    private final VoteService voteService;
     private final ReplyRepository replyRepository;
     private final ContentVoteRepository contentVoteRepository;
 
@@ -185,6 +193,19 @@ public class ContentService {
         boolean isExist = contentVoteRepository.existsByMemberAndContent(member, content);
 
         return isExist;
+    }
+
+    //댓글리스트를 댓글리스폰스 리스트로 변환
+    public List<CommentResponseDto> commentListToCommentResponseList(List<Comment> commentList,Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        List<CommentResponseDto> result =
+                commentList.stream()
+                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment),
+                                voteService.countCommentVotes(comment), voteService.checkMemberCommentVoted(member, comment)))
+                        .collect(Collectors.toList());
+        return result;
     }
 
 

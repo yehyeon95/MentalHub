@@ -19,7 +19,7 @@ public class CommentMapper {
     public CommentMapper(ReplyService replyService){
         this.replyService = replyService;
     }
-    public CommentResponseDto CommentToCommentResponseDto(Comment comment, List<Reply> replies){
+    public CommentResponseDto CommentToCommentResponseDto(Comment comment, List<Reply> replies, long commentVotesCnt, boolean isVoted){
         return new CommentResponseDto(
                 comment.getCommentId(),
                 comment.getMember().getMemberId(),
@@ -28,6 +28,8 @@ public class CommentMapper {
                 comment.getCreated_at(),
                 comment.getCommentBody(),
                 comment.isDeleted(),
-                replyService.mapReplies(replies));
+                replyService.mapReplies(replies),
+                commentVotesCnt,
+                isVoted);
     }
 }

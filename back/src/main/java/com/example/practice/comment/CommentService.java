@@ -10,7 +10,9 @@ import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.member.memberDto.duplicate.MemberNickname;
+import com.example.practice.vote.commentvote.CommentVoteRepository;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,21 +21,14 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CommentService {
     private final EntityManager em;
     private final MemberService memberService;
     private final ContentService contentService;
     private final CommentRepository commentRepository;
+    private final CommentVoteRepository commentVoteRepository;
 
-    public CommentService(EntityManager em,
-                          MemberService memberService,
-                          ContentService contentService,
-                          CommentRepository commentRepository){
-        this.em = em;
-        this.memberService = memberService;
-        this.contentService = contentService;
-        this.commentRepository = commentRepository;
-    }
 
     public long extractMemberId(Authentication authentication){
         Object principal = authentication.getPrincipal();
@@ -94,4 +89,5 @@ public class CommentService {
                         new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
         return findComment;
     }
+
 }
