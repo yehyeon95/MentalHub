@@ -12,6 +12,7 @@ import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.reply.dto.ReplyPostDto;
 import com.example.practice.reply.dto.ReplyResponseDto;
+import com.example.practice.reply.dto.ReplyResponseDtoNotUser;
 import com.example.practice.vote.VoteService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,13 @@ public class ReplyService {
         List<ReplyResponseDto> resultReplies =
                 replies.stream()
                         .map(reply-> replyMapper.ReplyToReplyResponseDto(reply, voteService.countReplyVotes(reply), voteService.checkMemberReplyVoted(member,reply)))
+                        .collect(Collectors.toList());
+        return resultReplies;
+    }
+    public List<ReplyResponseDtoNotUser> replyListToReplyResponseListNotUser(List<Reply> replies){
+        List<ReplyResponseDtoNotUser> resultReplies =
+                replies.stream()
+                        .map(reply-> replyMapper.ReplyToReplyResponseDtoNotUser(reply, voteService.countReplyVotes(reply)))
                         .collect(Collectors.toList());
         return resultReplies;
     }

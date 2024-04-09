@@ -108,7 +108,7 @@ public class MemberController {
     }
 
     //회원정보 불러오기.
-    @GetMapping("/somemember")
+    @GetMapping("/userinfo")
     public ResponseEntity getMember(Authentication authentication){
 
         long memberId = memberService.extractMemberId(authentication);

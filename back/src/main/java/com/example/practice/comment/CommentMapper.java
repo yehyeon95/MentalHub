@@ -1,6 +1,7 @@
 package com.example.practice.comment;
 
 import com.example.practice.comment.commentDto.CommentResponseDto;
+import com.example.practice.comment.commentDto.CommentResponseDtoNotUser;
 import com.example.practice.content.Content;
 import com.example.practice.content.ContentDto.ContentResponseDto;
 import com.example.practice.member.Member;
@@ -29,8 +30,23 @@ public class CommentMapper {
                 comment.getCreated_at(),
                 comment.getCommentBody(),
                 comment.isDeleted(),
-                replyService.replyListToReplyResponseList(replies,member),
                 commentVotesCnt,
-                isVoted);
+                isVoted,
+                replyService.replyListToReplyResponseList(replies,member)
+                );
     }
+    public CommentResponseDtoNotUser CommentToCommentResponseDtoNotUser(Comment comment, List<Reply> replies, long commentVotesCnt){
+        return new CommentResponseDtoNotUser(
+                comment.getCommentId(),
+                comment.getMember().getMemberId(),
+                comment.getMember().getNickname(),
+                comment.getContent().getContentId(),
+                comment.getCreated_at(),
+                comment.getCommentBody(),
+                comment.isDeleted(),
+                commentVotesCnt,
+                replyService.replyListToReplyResponseListNotUser(replies)
+                );
+    }
+
 }

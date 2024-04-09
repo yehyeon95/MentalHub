@@ -1,10 +1,7 @@
 package com.example.practice.comment.commentDto;
 
-import com.example.practice.comment.Comment;
-import com.example.practice.content.ContentDto.ContentResponseDto;
-import com.example.practice.member.Member;
-import com.example.practice.reply.Reply;
 import com.example.practice.reply.dto.ReplyResponseDto;
+import com.example.practice.reply.dto.ReplyResponseDtoNotUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CommentResponseDto {
+public class CommentResponseDtoNotUser {
     private long commentId;
     private long memberId;
     private String nickname;
@@ -24,8 +21,7 @@ public class CommentResponseDto {
     private String commentBody;
     private boolean deleted;
     private long CommentVotesCnt;
-    private boolean isVoted;
-    private List<ReplyResponseDto> replies;
+    private List<ReplyResponseDtoNotUser> replies;
 
 
 }

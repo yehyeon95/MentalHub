@@ -33,7 +33,7 @@ public class Content {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(length = 50, nullable = false, updatable = true, unique = false, name = "title")
+    @Column(length = 50, nullable = false, updatable = true, unique = true, name = "title")
     private String title;
 
     @Column(length = 1000, nullable = true, updatable = true, unique = false, name = "font")

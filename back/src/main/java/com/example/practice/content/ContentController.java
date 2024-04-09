@@ -4,9 +4,12 @@ import com.example.practice.comment.Comment;
 import com.example.practice.comment.CommentMapper;
 import com.example.practice.comment.CommentService;
 import com.example.practice.comment.commentDto.CommentResponseDto;
+import com.example.practice.comment.commentDto.CommentResponseDtoNotUser;
 import com.example.practice.content.ContentDto.*;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
+import com.example.practice.member.MemberRepository;
+import com.example.practice.member.MemberService;
 import com.example.practice.member.memberDto.MemberPostDto;
 import com.example.practice.reply.ReplyRepository;
 import com.example.practice.vote.VoteService;
@@ -35,6 +38,7 @@ public class ContentController {
     private final ContentService contentService;
     private final CommentMapper commentMapper;
     private final ReplyRepository replyRepository;
+    private final MemberService memberService;
     private final VoteService voteService;
 
 
@@ -64,12 +68,12 @@ public class ContentController {
 
         List<Comment> findComments = contentService.findVerifyComments(contentId);
 
-        List<CommentResponseDto> findCommentsList =
+        List<CommentResponseDtoNotUser> findCommentsList =
                 findComments.stream()
-                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment), voteService.countCommentVotes(comment),false,new Member()))
+                        .map(comment-> commentMapper.CommentToCommentResponseDtoNotUser(comment,replyRepository.findAllByComment(comment), voteService.countCommentVotes(comment)))
                         .collect(Collectors.toList());
 
-        return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
+        return new ResponseEntity<>(new ContentGetResponseNotUser(response, findCommentsList), HttpStatus.OK);
     }
     @GetMapping("/{contentId}/login")
     public ResponseEntity getContentLogin(@PathVariable("contentId") long contentId,
@@ -78,11 +82,17 @@ public class ContentController {
 
         List<Comment> findComments = contentService.findVerifyComments(contentId);
 
-        //댓글 리스트를 댓글 리스폰스 리스트로 변환
-        List<CommentResponseDto> findCommentsList = contentService.commentListToCommentResponseList(findComments, authentication);
+        long memberId = contentService.extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
 
 
-        return new ResponseEntity<>(new ContentGetResponseDto(response, findCommentsList), HttpStatus.OK);
+        List<CommentResponseDto> result =
+                findComments.stream()
+                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment),
+                                voteService.countCommentVotes(comment), voteService.checkMemberCommentVoted(member, comment),member))
+                        .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new ContentGetResponseDto(response, result), HttpStatus.OK);
     }
 
     @GetMapping
@@ -109,6 +119,8 @@ public class ContentController {
                                         Authentication authentication){
         long memberId = contentService.extractMemberId(authentication);
         contentService.deleteContent(contentId, memberId);
+
+
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

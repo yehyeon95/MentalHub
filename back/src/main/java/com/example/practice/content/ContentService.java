@@ -39,9 +39,7 @@ public class ContentService {
     private final EntityManager em;
     private final MemberService memberService;
     private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
-    private final CommentService commentService;
-    private final VoteService voteService;
+
     private final ReplyRepository replyRepository;
     private final ContentVoteRepository contentVoteRepository;
 
@@ -195,18 +193,6 @@ public class ContentService {
         return isExist;
     }
 
-    //댓글리스트를 댓글리스폰스 리스트로 변환
-    public List<CommentResponseDto> commentListToCommentResponseList(List<Comment> commentList,Authentication authentication){
-        long memberId = extractMemberId(authentication);
-        Member member = memberService.findVerifiedMember(memberId);
-
-        List<CommentResponseDto> result =
-                commentList.stream()
-                        .map(comment-> commentMapper.CommentToCommentResponseDto(comment,replyRepository.findAllByComment(comment),
-                                voteService.countCommentVotes(comment), voteService.checkMemberCommentVoted(member, comment),member))
-                        .collect(Collectors.toList());
-        return result;
-    }
 
 
 }
