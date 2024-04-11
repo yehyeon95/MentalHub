@@ -124,5 +124,13 @@ public class ContentController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @GetMapping("/search")
+    public ResponseEntity searchContent(@RequestParam("keyword") String keyword,
+                                        @RequestParam("searchType") String searchType,
+                                        @RequestParam("memberId") long memberId){
+        List<ContentResponseDto> response = contentService.searchContents(keyword,searchType,memberId);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

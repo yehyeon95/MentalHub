@@ -25,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -191,6 +192,53 @@ public class ContentService {
         boolean isExist = contentVoteRepository.existsByMemberAndContent(member, content);
 
         return isExist;
+    }
+
+    public List<ContentResponseDto> searchContents(String keyword, String searchType, long memberId){
+        List<Content> result = new ArrayList<>();
+
+        if(searchType.equals("nickname")){
+                String s = "select c from Content c where c.member.nickname = :keyword";
+
+                result = em.createQuery(s, Content.class)
+                        .setParameter("keyword", keyword)
+                        .getResultList();
+            }
+
+        else if(searchType.equals("title")){
+            String s = "select c from Content c where c.title like :keyword";
+
+            result = em.createQuery(s, Content.class)
+                    .setParameter("keyword", "%" + keyword + "%")
+                    .getResultList();
+
+        }
+        else if(searchType.equals("titleAndBody")){
+            String s = "select c from Content c where c.title like :keyword or c.body like :keyword";
+
+            result = em.createQuery(s, Content.class)
+                    .setParameter("keyword", "%" + keyword + "%")
+                    .getResultList();
+
+        }
+        List<ContentResponseDto> response = new ArrayList<>();
+
+        if(memberId==0){
+            response =
+                    result.stream()
+                            .map(content-> contentMapper.ContentToContentResponseDto(content,getCommentsCount(content.getContentId()),getContentVotesCount(content.getContentId()),false))
+                            .collect(Collectors.toList());
+        }
+        else{
+        Member member = memberService.findVerifiedMember(memberId);
+
+        response =
+                result.stream()
+                        .map(content-> contentMapper.ContentToContentResponseDto(content,getCommentsCount(content.getContentId()),getContentVotesCount(content.getContentId()),
+                                checkMemberContentVoted(member, content)))
+                        .collect(Collectors.toList());
+        }
+        return response;
     }
 
 
