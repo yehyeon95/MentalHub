@@ -42,7 +42,7 @@ function SingleViewComponent() {
             setPostData(data.contentResponseDto);
             setContentId(data.contentResponseDto.contentId);
             setCommentData(data.commentsList);
-            console.log(data.contentResponseDto);
+            //console.log(data.contentResponseDto);
         });
     };
 
@@ -62,6 +62,10 @@ function SingleViewComponent() {
     const formattedCreDate = formatDate(postData.createdAt);
 
     const handleUpVote = async (callback) => {
+        if (!sessionStorage.getItem('memberId')) {
+            alert('로그인 후에 추천해주세요!');
+            return;
+        }
         const data = {
             contentId: id,
         };
@@ -72,6 +76,10 @@ function SingleViewComponent() {
         });
     };
     const handleDownVote = async (callback) => {
+        if (!sessionStorage.getItem('memberId')) {
+            alert('로그인 후에 이용해주세요!');
+            return;
+        }
         const data = {
             contentId: id,
         };
@@ -125,21 +133,19 @@ function SingleViewComponent() {
                             />
                         )}
                     </div>
-                    {sessionStorage.getItem('memberId') && (
-                        <div className="mb-4 d-flex justify-content-center" style={{ color: '#0d6efd' }}>
-                            {!postData.voted ? (
-                                <BsHandThumbsUp
-                                    style={{ fontSize: '2rem', cursor: 'pointer' }}
-                                    onClick={handleUpVote}
-                                />
-                            ) : (
-                                <BsHandThumbsUpFill
-                                    style={{ fontSize: '2rem', cursor: 'pointer' }}
-                                    onClick={handleDownVote}
-                                />
-                            )}
+                    <div className="mb-4 d-flex justify-content-center" style={{ color: '#0d6efd' }}>
+                        <div className="mb-1 mx-4" style={{ color: 'black' }}>
+                            추천수 : {postData.contentVotesCnt}
                         </div>
-                    )}
+                        {!postData.voted ? (
+                            <BsHandThumbsUp style={{ fontSize: '2rem', cursor: 'pointer' }} onClick={handleUpVote} />
+                        ) : (
+                            <BsHandThumbsUpFill
+                                style={{ fontSize: '2rem', cursor: 'pointer' }}
+                                onClick={handleDownVote}
+                            />
+                        )}
+                    </div>
                     <Comment commentData={commentData} />
                     {sessionStorage.getItem('memberId') && <CommentWrite contentId={contentId} />}
                 </div>

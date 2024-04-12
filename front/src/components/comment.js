@@ -74,8 +74,12 @@ function Comment({ commentData }) {
     };
 
     const handleUpVote = async (index) => {
+        if (!sessionStorage.getItem('memberId')) {
+            alert('로그인 후에 추천해주세요!');
+            return;
+        }
         const data = {
-            commentId: commentData[index].contentId,
+            commentId: commentData[index].commentId,
         };
         let path = await fetchUpVoteComment(JSON.stringify(data)).then((data) => {
             console.log('추천', data);
@@ -84,8 +88,12 @@ function Comment({ commentData }) {
         });
     };
     const handleDownVote = async (index) => {
+        if (!sessionStorage.getItem('memberId')) {
+            alert('로그인 후에 이용해주세요!');
+            return;
+        }
         const data = {
-            commentId: commentData[index].contentId,
+            commentId: commentData[index].commentId,
         };
         let path = await fetchDownVoteComment(JSON.stringify(data)).then((data) => {
             console.log('비추천', data);
@@ -149,18 +157,19 @@ function Comment({ commentData }) {
                                 </h6>
                             )}
                         </div>
-                        {sessionStorage.getItem('memberId') && (
-                            <div className="mb-1 mx-4 d-flex justify-content-end" style={{ color: '#0d6efd' }}>
-                                {!comment.voted ? (
-                                    <BsHandThumbsUp style={{ cursor: 'pointer' }} onClick={() => handleUpVote(index)} />
-                                ) : (
-                                    <BsHandThumbsUpFill
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => handleDownVote(index)}
-                                    />
-                                )}
+                        <div className="mb-1 mx-4 d-flex justify-content-end" style={{ color: '#0d6efd' }}>
+                            <div className="mb-1 mx-4" style={{ color: 'black' }}>
+                                추천수 : {comment.commentVotesCnt}
                             </div>
-                        )}
+                            {!comment.voted ? (
+                                <BsHandThumbsUp style={{ cursor: 'pointer' }} onClick={() => handleUpVote(index)} />
+                            ) : (
+                                <BsHandThumbsUpFill
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => handleDownVote(index)}
+                                />
+                            )}
+                        </div>
                     </div>
                     <Reply reply={comment.replies} />
                     <ReplyWrite contentId={comment.contentId} commentId={comment.commentId} />
