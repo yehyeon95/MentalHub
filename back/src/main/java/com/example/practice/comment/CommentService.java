@@ -1,15 +1,15 @@
 package com.example.practice.comment;
 
-import com.example.practice.comment.commentDto.CommentBody;
 import com.example.practice.comment.commentDto.CommentPostDto;
+import com.example.practice.comment.commentDto.MyComments;
 import com.example.practice.content.Content;
-import com.example.practice.content.ContentDto.ContentPostDto;
 import com.example.practice.content.ContentService;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
-import com.example.practice.member.memberDto.duplicate.MemberNickname;
+import com.example.practice.reply.Reply;
+import com.example.practice.reply.ReplyRepository;
 import com.example.practice.vote.commentvote.CommentVoteRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class CommentService {
     private final MemberService memberService;
     private final ContentService contentService;
     private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
     private final CommentVoteRepository commentVoteRepository;
 
 
@@ -88,6 +90,20 @@ public class CommentService {
                 optionalComment.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
         return findComment;
+    }
+
+    public MyComments getMyComments(Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        List<Comment> myCommentsList = commentRepository.findAllByMember(member);
+        List<Reply> myRepliesList = replyRepository.findAllByMember(member);
+
+        long commentsCnt = commentRepository.countAllByMember(member)+ replyRepository.countAllByMember(member);
+
+        MyComments myComments = new MyComments(myCommentsList, myRepliesList,commentsCnt);
+
+        return myComments;
     }
 
 }

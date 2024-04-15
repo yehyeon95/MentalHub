@@ -1,9 +1,7 @@
 package com.example.practice.comment;
 
-import com.example.practice.comment.commentDto.CommentBody;
 import com.example.practice.comment.commentDto.CommentPostDto;
-import com.example.practice.content.ContentMapper;
-import com.example.practice.content.ContentService;
+import com.example.practice.comment.commentDto.MyComments;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +17,14 @@ public class CommentController {
 
     private final CommentMapper commentMapper;
     private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     public CommentController(CommentMapper commentMapper,
-                             CommentService commentService){
+                             CommentService commentService,
+                             CommentRepository commentRepository){
         this.commentMapper = commentMapper;
         this.commentService = commentService;
+        this.commentRepository = commentRepository;
     }
     @PostMapping
     public ResponseEntity postComment(@Valid @RequestBody CommentPostDto commentPostDto,
@@ -38,6 +39,13 @@ public class CommentController {
                                        Authentication authentication){
         Comment comment = commentService.updateComment(commentPostDto, commentId, authentication);
         return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
+
+    @GetMapping("/mycomments")
+    public ResponseEntity getMemberComment(Authentication authentication){
+
+        MyComments myComments = commentService.getMyComments(authentication);
+        return new ResponseEntity<>(myComments, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")

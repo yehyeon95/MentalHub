@@ -5,10 +5,7 @@ import com.example.practice.comment.CommentMapper;
 import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.comment.commentDto.CommentResponseDtoNotUser;
 import com.example.practice.content.ContentDto.*;
-import com.example.practice.content.ContentDto.response.ContentGetResponseDto;
-import com.example.practice.content.ContentDto.response.ContentGetResponseNotUser;
-import com.example.practice.content.ContentDto.response.ContentPageResponseDto;
-import com.example.practice.content.ContentDto.response.ContentResponseDto;
+import com.example.practice.content.ContentDto.response.*;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
@@ -94,6 +91,14 @@ public class ContentController {
 
         return new ResponseEntity<>(new ContentGetResponseDto(response, result), HttpStatus.OK);
     }
+
+    @GetMapping("/mycontents")
+    public ResponseEntity getMyContents(Authentication authentication){
+        MyContents response = contentService.getMyContents(authentication);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @GetMapping
     public ResponseEntity getAllContents(@RequestParam("page") @Positive int page,

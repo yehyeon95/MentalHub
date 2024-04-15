@@ -5,6 +5,7 @@ import com.example.practice.comment.CommentRepository;
 import com.example.practice.content.ContentDto.ContentPatchDto;
 import com.example.practice.content.ContentDto.ContentPostDto;
 import com.example.practice.content.ContentDto.response.ContentResponseDto;
+import com.example.practice.content.ContentDto.response.MyContents;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
@@ -107,6 +108,19 @@ public class ContentService {
 
         return result;
     }
+
+    public MyContents getMyContents(Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        List<Content> myContentsList = contentRepository.findAllByMember(member);
+        long myContentsCnt = contentRepository.countAllByMember(member);
+
+        MyContents result = new MyContents(myContentsList, myContentsCnt);
+
+        return result;
+    }
+
     public ContentResponseDto getContentLogin(long contentId, Authentication authentication){
 
         Optional<Content> optionalContent = contentRepository.findById(contentId);
