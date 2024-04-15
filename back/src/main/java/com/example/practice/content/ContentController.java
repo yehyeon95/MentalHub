@@ -2,15 +2,16 @@ package com.example.practice.content;
 
 import com.example.practice.comment.Comment;
 import com.example.practice.comment.CommentMapper;
-import com.example.practice.comment.CommentService;
 import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.comment.commentDto.CommentResponseDtoNotUser;
 import com.example.practice.content.ContentDto.*;
+import com.example.practice.content.ContentDto.response.ContentGetResponseDto;
+import com.example.practice.content.ContentDto.response.ContentGetResponseNotUser;
+import com.example.practice.content.ContentDto.response.ContentPageResponseDto;
+import com.example.practice.content.ContentDto.response.ContentResponseDto;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.member.Member;
-import com.example.practice.member.MemberRepository;
 import com.example.practice.member.MemberService;
-import com.example.practice.member.memberDto.MemberPostDto;
 import com.example.practice.reply.ReplyRepository;
 import com.example.practice.vote.VoteService;
 import jakarta.validation.Valid;
@@ -24,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController

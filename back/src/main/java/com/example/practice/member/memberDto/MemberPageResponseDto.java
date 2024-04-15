@@ -1,6 +1,5 @@
 package com.example.practice.member.memberDto;
 
-import com.example.practice.content.ContentDto.ContentResponseDto;
 import com.example.practice.global.dto.PageInfo;
 import lombok.Getter;
 

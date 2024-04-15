@@ -1,8 +1,5 @@
 package com.example.practice.member;
 
-import com.example.practice.content.Content;
-import com.example.practice.content.ContentDto.ContentPageResponseDto;
-import com.example.practice.content.ContentDto.ContentResponseDto;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;

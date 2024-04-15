@@ -1,6 +1,5 @@
-package com.example.practice.content.ContentDto;
+package com.example.practice.content.ContentDto.response;
 
-import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.comment.commentDto.CommentResponseDtoNotUser;
 import lombok.Getter;
 import lombok.Setter;

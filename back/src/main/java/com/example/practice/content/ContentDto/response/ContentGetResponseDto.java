@@ -1,9 +1,6 @@
-package com.example.practice.content.ContentDto;
+package com.example.practice.content.ContentDto.response;
 
-import com.example.practice.comment.Comment;
 import com.example.practice.comment.commentDto.CommentResponseDto;
-import com.example.practice.global.dto.PageInfo;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

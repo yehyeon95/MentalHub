@@ -1,9 +1,5 @@
 package com.example.practice.comment.commentDto;
 
-import com.example.practice.comment.Comment;
-import com.example.practice.content.ContentDto.ContentResponseDto;
-import com.example.practice.member.Member;
-import com.example.practice.reply.Reply;
 import com.example.practice.reply.dto.ReplyResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

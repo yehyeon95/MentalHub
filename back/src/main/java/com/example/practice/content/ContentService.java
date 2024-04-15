@@ -1,21 +1,15 @@
 package com.example.practice.content;
 
 import com.example.practice.comment.Comment;
-import com.example.practice.comment.CommentMapper;
 import com.example.practice.comment.CommentRepository;
-import com.example.practice.comment.CommentService;
-import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.content.ContentDto.ContentPatchDto;
 import com.example.practice.content.ContentDto.ContentPostDto;
-import com.example.practice.content.ContentDto.ContentResponseDto;
+import com.example.practice.content.ContentDto.response.ContentResponseDto;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
 import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
-import com.example.practice.member.memberDto.MemberResponseDto;
 import com.example.practice.reply.ReplyRepository;
-import com.example.practice.vote.VoteService;
-import com.example.practice.vote.contentvote.ContentVote;
 import com.example.practice.vote.contentvote.ContentVoteRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

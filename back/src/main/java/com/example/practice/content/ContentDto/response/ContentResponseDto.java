@@ -1,4 +1,4 @@
-package com.example.practice.content.ContentDto;
+package com.example.practice.content.ContentDto.response;
 
 import com.example.practice.comment.Comment;
 import com.example.practice.member.Member;

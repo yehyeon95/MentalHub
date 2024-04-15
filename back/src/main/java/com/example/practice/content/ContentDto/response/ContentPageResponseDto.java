@@ -1,4 +1,4 @@
-package com.example.practice.content.ContentDto;
+package com.example.practice.content.ContentDto.response;
 
 import com.example.practice.global.dto.PageInfo;
 import lombok.Getter;
