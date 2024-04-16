@@ -5,9 +5,13 @@ import CardComponent from '../components/card';
 import Pagination from '../components/pagination';
 //외부라이브러리 사용시에는 중괄호를 써주고 같은 프로젝트 내에 있으면 중괄호 안씀
 import Loading from '../components/loading';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchResult } from '../redux/action';
 
 const Board = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const searchResult = useSelector((state) => state.searchResult);
     const [postsList, setPostsList] = useState([]);
     const [notiList, setNotiList] = useState([]);
     const [pageInfo, setPageInfo] = useState({});
@@ -51,8 +55,8 @@ const Board = () => {
             fetchPostsNotiList().then((res) => {
                 setNotiList(res.data);
                 setNotiInfo(res);
-                console.log('noti res', res);
-                console.log('noti res.data', res.data);
+                //console.log('noti res', res);
+                //console.log('noti res.data', res.data);
             });
             fetchPostsList(currentPage, currentFilter).then((res) => {
                 setPostsList(res.data); //리스트 배열로 들어오는거 이름 맞추기
@@ -60,7 +64,7 @@ const Board = () => {
                 //setSearch(searchText);
                 setIsUpdate(false);
                 setIsPending(false);
-                console.log(res.data);
+                //console.log(res.data);
             });
         }
     }, [isUpdate]);
@@ -103,14 +107,6 @@ const Board = () => {
                     >
                         정보
                     </button>
-                    {/* <button
-                        type="button"
-                        value="notice"
-                        onClick={() => onFilterClick('notice')}
-                        className={`btn ${currentFilter === 'notice' ? 'btn-primary' : 'btn-outline-primary'}`}
-                    >
-                        공지
-                    </button> */}
                 </div>
             </div>
             <div className="container mx-auto">

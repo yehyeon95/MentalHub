@@ -66,6 +66,10 @@ function Reply({ reply }) {
     };
 
     const handleUpVote = async (index) => {
+        if (!sessionStorage.getItem('memberId')) {
+            alert('로그인 후에 추천해주세요!');
+            return;
+        }
         const data = {
             replyId: reply[index].replyId,
         };
@@ -76,6 +80,10 @@ function Reply({ reply }) {
         });
     };
     const handleDownVote = async (index) => {
+        if (!sessionStorage.getItem('memberId')) {
+            alert('로그인 후에 이용해주세요!');
+            return;
+        }
         const data = {
             replyId: reply[index].replyId,
         };
@@ -140,18 +148,16 @@ function Reply({ reply }) {
                             </h6>
                         )}
                     </div>
-                    {sessionStorage.getItem('memberId') && (
-                        <div className="mb-2 mx-4 d-flex justify-content-end" style={{ color: '#0d6efd' }}>
-                            {!reply.voted ? (
-                                <BsHandThumbsUp style={{ cursor: 'pointer' }} onClick={() => handleUpVote(index)} />
-                            ) : (
-                                <BsHandThumbsUpFill
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => handleDownVote(index)}
-                                />
-                            )}
+                    <div className="mb-2 mx-4 d-flex justify-content-end" style={{ color: '#0d6efd' }}>
+                        <div className="mb-1 mx-4" style={{ color: 'black' }}>
+                            추천수 : {reply.replyVotesCnt}
                         </div>
-                    )}
+                        {!reply.voted ? (
+                            <BsHandThumbsUp style={{ cursor: 'pointer' }} onClick={() => handleUpVote(index)} />
+                        ) : (
+                            <BsHandThumbsUpFill style={{ cursor: 'pointer' }} onClick={() => handleDownVote(index)} />
+                        )}
+                    </div>
                 </div>
             ))}
             <Modal show={showDelModal} onHide={handleReplyCancelDelete}>

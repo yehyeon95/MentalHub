@@ -16,8 +16,8 @@ function WriteComponent() {
     const editorRef = useRef(null);
     const [title, setTitle] = useState('');
     //const [body, setBody] = useState('');
-    const [boardType, setBoardType] = useState(''); //드롭다운 이벤트 상태변화
-    const [type, setType] = useState(''); //실제 요청을 보낼때의 타입상태변화
+    const [boardType, setBoardType] = useState('일반 게시글'); //드롭다운 이벤트 상태변화
+    const [type, setType] = useState('일반 게시글'); //실제 요청을 보낼때의 타입상태변화
     const handleTitle = (e) => {
         setTitle(e.target.value);
     };
@@ -104,13 +104,13 @@ function WriteComponent() {
                     ></input>
                     <div className="dropdown  mb-4">
                         <button
-                            className={`btn dropdown-toggle ${boardType ? 'btn-primary' : 'btn-secondary'}`}
+                            className={`btn dropdown-toggle ${boardType ? 'btn-primary' : 'btn-primary'}`}
                             type="button"
                             id="dropdownMenuButton1"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            {boardType ? boardType : '게시글 형식을 선택해주세요'}
+                            {boardType ? boardType : '일반 게시글'}
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li>
