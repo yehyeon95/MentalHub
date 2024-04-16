@@ -114,7 +114,7 @@ export const fetchPostsList = async (page, filter) => {
             }
             if (res.ok) {
                 //console.log('단일 게시물 조회 성공');
-                console.log('성공:' + res);
+                //console.log('성공:' + res);
                 return res.json();
             }
         })
@@ -136,12 +136,12 @@ export const fetchPostsNotiList = async (page) => {
     })
         .then((res) => {
             if (!res.ok) {
-                console.log('실패:' + res);
+                //console.log('실패:' + res);
                 throw Error('유효하지 않은 요청입니다.');
             }
             if (res.ok) {
                 //console.log('단일 게시물 조회 성공');
-                console.log('성공:' + res);
+                //console.log('성공:' + res);
                 return res.json();
             }
         })
@@ -197,6 +197,57 @@ export const fetchPostDelete = async (contentId) => {
                 console.log('게시글 삭제완료');
                 return res;
             }
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
+
+/**
+ * 검색 기능(제목)
+ */
+
+export const fetchSearch = async (searchText, searchType) => {
+    console.log('여기까지오는지 확인');
+    console.log(searchText);
+    console.log(searchType);
+    let url = '';
+    let id = 0;
+    if (sessionStorage.getItem('memberId')) {
+        id = sessionStorage.getItem('memberId');
+    } else {
+        id = 0;
+        // 굳이 없어도 될것같기는한데 추가
+    }
+    if (searchType === '제목') {
+        url = `contents/search?keyword=${searchText}&searchType=title&memberId=${id}`;
+        console.log('title', url);
+    } else if (searchType === '제목+닉네임') {
+        url = `contents/search?keyword=${searchText}&searchType=titleAndBody&memberId=${id}`;
+        console.log('titleAndBody', url);
+    } else if (searchType === '닉네임') {
+        url = `contents/search?keyword=${searchText}&searchType=nickname&memberId=${id}`;
+        console.log('nickname', url);
+    }
+    return fetch(url, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            'ngrok-skip-browser-warning': '69420',
+        },
+    })
+        .then((res) => {
+            if (!res.ok) {
+                throw Error('유효하지 않은 요청이다.');
+            }
+            if (res.ok) {
+                console.log('검색중일로왔음');
+                return res.json();
+            }
+        })
+        .then((data) => {
+            console.log('검색 data');
+            return data;
         })
         .catch((err) => {
             throw Error(err.message);
