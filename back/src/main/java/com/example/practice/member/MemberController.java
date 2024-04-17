@@ -162,7 +162,7 @@ public class MemberController {
     }
 
     //비밀번호 확인
-    @GetMapping("/checkpassword")
+    @PostMapping("/checkpassword")
     public ResponseEntity verifyPassword(@Valid @RequestBody MemberPassword memberPassword,
                                          Authentication authentication){
         long memberId = memberService.extractMemberId(authentication);

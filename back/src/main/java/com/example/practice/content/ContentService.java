@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,11 +115,31 @@ public class ContentService {
         Member member = memberService.findVerifiedMember(memberId);
 
         List<Content> myContentsList = contentRepository.findAllByMember(member);
-        long myContentsCnt = contentRepository.countAllByMember(member);
+        long myContentsCnt = getMyContentsCnt(authentication);
 
         MyContents result = new MyContents(myContentsList, myContentsCnt);
 
         return result;
+    }
+    public long getMyContentsCnt(Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        long myContentsCnt = contentRepository.countAllByMember(member);
+        return myContentsCnt;
+    }
+    public long getMyContentVoteCnt(Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        long cnt = 0;
+
+        List<Content> myContentsList = contentRepository.findAllByMember(member);
+
+        for(Content content : myContentsList){
+            cnt = cnt + getContentVotesCount(content.getContentId());
+        }
+        return cnt;
     }
 
     public ContentResponseDto getContentLogin(long contentId, Authentication authentication){

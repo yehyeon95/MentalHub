@@ -10,6 +10,7 @@ import com.example.practice.member.Member;
 import com.example.practice.member.MemberService;
 import com.example.practice.reply.Reply;
 import com.example.practice.reply.ReplyRepository;
+import com.example.practice.vote.VoteService;
 import com.example.practice.vote.commentvote.CommentVoteRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CommentService {
     private final ContentService contentService;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
-    private final CommentVoteRepository commentVoteRepository;
+    private final VoteService voteService;
 
 
     public long extractMemberId(Authentication authentication){
@@ -99,11 +100,37 @@ public class CommentService {
         List<Comment> myCommentsList = commentRepository.findAllByMember(member);
         List<Reply> myRepliesList = replyRepository.findAllByMember(member);
 
-        long commentsCnt = commentRepository.countAllByMember(member)+ replyRepository.countAllByMember(member);
+        long commentsCnt = getMyCommentsCnt(authentication);
 
         MyComments myComments = new MyComments(myCommentsList, myRepliesList,commentsCnt);
 
         return myComments;
+    }
+
+    public long getMyCommentsCnt(Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        long commentsCnt = commentRepository.countAllByMember(member)+ replyRepository.countAllByMember(member);
+
+        return commentsCnt;
+    }
+    public long getMyCommentsVoteCnt(Authentication authentication){
+        long memberId = extractMemberId(authentication);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        List<Comment> myCommentsList = commentRepository.findAllByMember(member);
+        List<Reply> myRepliesList = replyRepository.findAllByMember(member);
+
+        long cnt = 0;
+        for(Comment comment : myCommentsList){
+            cnt = cnt + voteService.countCommentVotes(comment);
+        }
+        for(Reply reply : myRepliesList){
+            cnt = cnt + voteService.countReplyVotes(reply);
+        }
+
+        return cnt;
     }
 
 }

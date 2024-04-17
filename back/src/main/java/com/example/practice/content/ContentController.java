@@ -4,6 +4,7 @@ import com.example.practice.comment.Comment;
 import com.example.practice.comment.CommentMapper;
 import com.example.practice.comment.commentDto.CommentResponseDto;
 import com.example.practice.comment.commentDto.CommentResponseDtoNotUser;
+import com.example.practice.comment.commentDto.MyCommentsCnt;
 import com.example.practice.content.ContentDto.*;
 import com.example.practice.content.ContentDto.response.*;
 import com.example.practice.global.dto.PageInfo;
@@ -99,6 +100,21 @@ public class ContentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/mycontents/cnt")
+    public ResponseEntity getMyContentsCnt(Authentication authentication){
+        long cnt = contentService.getMyContentsCnt(authentication);
+        MyContentsCnt myContentsCnt = new MyContentsCnt(cnt);
+
+        return new ResponseEntity<>(myContentsCnt, HttpStatus.OK);
+    }
+    @GetMapping("/mycontents/votecnt")
+    public ResponseEntity getMyContentsVoteCnt(Authentication authentication){
+        long cnt = contentService.getMyContentVoteCnt(authentication);
+        MyContentsVoteCnt myContentsVoteCnt = new MyContentsVoteCnt(cnt);
+
+        return new ResponseEntity<>(myContentsVoteCnt, HttpStatus.OK);
+    }
+
 
     @GetMapping
     public ResponseEntity getAllContents(@RequestParam("page") @Positive int page,
@@ -124,8 +140,6 @@ public class ContentController {
                                         Authentication authentication){
         long memberId = contentService.extractMemberId(authentication);
         contentService.deleteContent(contentId, memberId);
-
-
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

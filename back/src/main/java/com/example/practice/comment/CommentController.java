@@ -2,6 +2,8 @@ package com.example.practice.comment;
 
 import com.example.practice.comment.commentDto.CommentPostDto;
 import com.example.practice.comment.commentDto.MyComments;
+import com.example.practice.comment.commentDto.MyCommentsCnt;
+import com.example.practice.comment.commentDto.MyCommentsVoteCnt;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +48,22 @@ public class CommentController {
 
         MyComments myComments = commentService.getMyComments(authentication);
         return new ResponseEntity<>(myComments, HttpStatus.OK);
+    }
+    @GetMapping("/mycomments/cnt")
+    public ResponseEntity getMemberCommentsCnt(Authentication authentication){
+        long cnt = commentService.getMyCommentsCnt(authentication);
+
+        MyCommentsCnt myCommentsCnt = new MyCommentsCnt(cnt);
+
+        return new ResponseEntity<>(myCommentsCnt, HttpStatus.OK);
+    }
+    @GetMapping("/mycomments/votecnt")
+    public ResponseEntity getMemberCommentsVoteCnt(Authentication authentication){
+        long cnt = commentService.getMyCommentsVoteCnt(authentication);
+
+        MyCommentsVoteCnt myCommentsVoteCnt = new MyCommentsVoteCnt(cnt);
+
+        return new ResponseEntity<>(myCommentsVoteCnt, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
