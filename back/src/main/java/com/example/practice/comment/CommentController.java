@@ -49,22 +49,6 @@ public class CommentController {
         MyComments myComments = commentService.getMyComments(authentication);
         return new ResponseEntity<>(myComments, HttpStatus.OK);
     }
-    @GetMapping("/mycomments/cnt")
-    public ResponseEntity getMemberCommentsCnt(Authentication authentication){
-        long cnt = commentService.getMyCommentsCnt(authentication);
-
-        MyCommentsCnt myCommentsCnt = new MyCommentsCnt(cnt);
-
-        return new ResponseEntity<>(myCommentsCnt, HttpStatus.OK);
-    }
-    @GetMapping("/mycomments/votecnt")
-    public ResponseEntity getMemberCommentsVoteCnt(Authentication authentication){
-        long cnt = commentService.getMyCommentsVoteCnt(authentication);
-
-        MyCommentsVoteCnt myCommentsVoteCnt = new MyCommentsVoteCnt(cnt);
-
-        return new ResponseEntity<>(myCommentsVoteCnt, HttpStatus.OK);
-    }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity deleteComment(@PathVariable("commentId") long commentId,

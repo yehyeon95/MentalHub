@@ -100,21 +100,6 @@ public class ContentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/mycontents/cnt")
-    public ResponseEntity getMyContentsCnt(Authentication authentication){
-        long cnt = contentService.getMyContentsCnt(authentication);
-        MyContentsCnt myContentsCnt = new MyContentsCnt(cnt);
-
-        return new ResponseEntity<>(myContentsCnt, HttpStatus.OK);
-    }
-    @GetMapping("/mycontents/votecnt")
-    public ResponseEntity getMyContentsVoteCnt(Authentication authentication){
-        long cnt = contentService.getMyContentVoteCnt(authentication);
-        MyContentsVoteCnt myContentsVoteCnt = new MyContentsVoteCnt(cnt);
-
-        return new ResponseEntity<>(myContentsVoteCnt, HttpStatus.OK);
-    }
-
 
     @GetMapping
     public ResponseEntity getAllContents(@RequestParam("page") @Positive int page,

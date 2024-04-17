@@ -1,5 +1,7 @@
 package com.example.practice.member;
 
+import com.example.practice.comment.CommentService;
+import com.example.practice.content.ContentService;
 import com.example.practice.global.dto.PageInfo;
 import com.example.practice.global.exception.BusinessLogicException;
 import com.example.practice.global.exception.ExceptionCode;
@@ -9,6 +11,7 @@ import com.example.practice.member.memberDto.duplicate.MemberNickname;
 import com.example.practice.member.memberDto.duplicate.MemberPassword;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,21 +28,17 @@ import java.util.stream.Collectors;
 @RequestMapping("/members")
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class MemberController {
     //의존성 주입
-    private final MemberRepository memberRepository;
 
     private final MemberService memberService;
 
     private final MemberMapper memberMapper;
+    private final ContentService contentService;
+    private final CommentService commentService;
 
-    public MemberController(MemberRepository memberRepository,
-                            MemberService memberService,
-                            MemberMapper memberMapper){
-        this.memberRepository = memberRepository;
-        this.memberService = memberService;
-        this.memberMapper = memberMapper;
-    }
+
 
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberPostDto){
@@ -143,6 +142,18 @@ public class MemberController {
         log.info("response length = {}" , response.size());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/mypage/summary")
+    public ResponseEntity getMyPageSummary(Authentication authentication){
+        long contentsCnt = contentService.getMyContentsCnt(authentication);
+        long contentsVoteCnt = contentService.getMyContentVoteCnt(authentication);
+        long commentsCnt = commentService.getMyCommentsCnt(authentication);
+        long commentsVoteCnt = commentService.getMyCommentsVoteCnt(authentication);
+
+        MyPageSummary myPageSummary = new MyPageSummary(contentsCnt, contentsVoteCnt, commentsCnt, commentsVoteCnt);
+
+        return new ResponseEntity<>(myPageSummary, HttpStatus.OK);
+
     }
 
     //회원 삭제
