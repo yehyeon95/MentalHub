@@ -17,7 +17,7 @@ function WriteComponent() {
     const [title, setTitle] = useState('');
     //const [body, setBody] = useState('');
     const [boardType, setBoardType] = useState('일반 게시글'); //드롭다운 이벤트 상태변화
-    const [type, setType] = useState('일반 게시글'); //실제 요청을 보낼때의 타입상태변화
+    const [type, setType] = useState('post'); //실제 요청을 보낼때의 타입상태변화
     const handleTitle = (e) => {
         setTitle(e.target.value);
     };
