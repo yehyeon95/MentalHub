@@ -51,20 +51,15 @@ const Board = () => {
      */
     useEffect(() => {
         if (isUpdate) {
-            //fetchQuestionList(currentPage, currentFilter, searchText).then((res) => {
             fetchPostsNotiList().then((res) => {
                 setNotiList(res.data);
                 setNotiInfo(res);
-                //console.log('noti res', res);
-                //console.log('noti res.data', res.data);
             });
             fetchPostsList(currentPage, currentFilter).then((res) => {
                 setPostsList(res.data); //리스트 배열로 들어오는거 이름 맞추기
                 setPageInfo(res); //페이지 인포만 들어오는걸로 확인
-                //setSearch(searchText);
                 setIsUpdate(false);
                 setIsPending(false);
-                //console.log(res.data);
             });
         }
     }, [isUpdate]);
@@ -89,7 +84,6 @@ const Board = () => {
                         글쓰기
                     </button>
                 )}
-                {/* <div className="m-4">{pageInfo}</div> */}
                 <div className="filter btn-group my-4">
                     <button
                         type="button"

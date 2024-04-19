@@ -253,3 +253,63 @@ export const fetchSearch = async (searchText, searchType) => {
             throw Error(err.message);
         });
 };
+
+/**
+ * 마이페이지(내가 쓴글) 조회
+ */
+
+export const fetchMyPost = async (id) => {
+    return fetch(`/contents/mycontents`, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            authorization: sessionStorage.getItem('access_token'),
+            'ngrok-skip-browser-warning': '69420',
+        },
+    })
+        .then((res) => {
+            if (!res.ok) {
+                throw Error('유효하지 않은 요청이다.');
+            }
+            if (res.ok) {
+                console.log('내정보조회');
+                return res.json();
+            }
+        })
+        .then((data) => {
+            return data;
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
+
+/**
+ * 마이페이지 요약(summary) 조회
+ */
+
+export const fetchMySummary = async (id) => {
+    return fetch(`/members/mypage/summary`, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            authorization: sessionStorage.getItem('access_token'),
+            'ngrok-skip-browser-warning': '69420',
+        },
+    })
+        .then((res) => {
+            if (!res.ok) {
+                throw Error('유효하지 않은 요청이다.');
+            }
+            if (res.ok) {
+                console.log('내정보조회');
+                return res.json();
+            }
+        })
+        .then((data) => {
+            return data;
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
