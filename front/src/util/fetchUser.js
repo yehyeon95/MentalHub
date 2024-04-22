@@ -27,7 +27,7 @@ export const fetchUserJoin = async (data) => {
 export const fetchUserLogin = async (data) => {
     return fetch('/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        headers: { 'content-type': 'application/json;charset=UTF-8', 'ngrok-skip-browser-warning': '69420' },
         body: data,
     })
         .then((res) => {
@@ -77,6 +77,33 @@ export const fetchUserDelete = async (data) => {
 };
 
 /**
+ * 사용자확인(기존 비밀번호 확인)
+ */
+export const fetchUserPrePassword = async (data) => {
+    return fetch('/members/checkpassword', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            authorization: sessionStorage.getItem('access_token'),
+        },
+        body: data,
+    })
+        .then((res) => {
+            if (!res.ok) {
+                throw Error('유효하지 않은 요청입니다.');
+            }
+            console.log(res);
+            return res.json();
+        })
+        .then((data) => {
+            return data;
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
+
+/**
  * 회원정보수정
  */
 export const fetchUserUpdate = async (data) => {
@@ -111,10 +138,9 @@ export const fetchUserUpdate = async (data) => {
 /**
  * 회원정보조회
  */
-
 export const fetchUserInfo = async (data) => {
     console.log('getUserInfo 함수 진입');
-    return fetch('/members/somemember', {
+    return fetch('/members/userinfo', {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
