@@ -66,7 +66,7 @@ const Board = () => {
 
     if (isPending) {
         return (
-            <div>
+            <div className="container d-flex justify-content-center align-items-center vh-100">
                 <Loading />
             </div>
         );
@@ -78,20 +78,15 @@ const Board = () => {
 
     return (
         <div>
-            <div className="container m-3 p-3 mx-auto d-flex justify-content-end">
-                {sessionStorage.getItem('memberId') && (
-                    <button onClick={handleWriteButton} className="btn btn-primary my-4 mx-4">
-                        글쓰기
-                    </button>
-                )}
-                <div className="filter btn-group my-4">
+            <div className="container m-3 p-3 mx-auto d-flex justify-content-between">
+                <div className="filter btn-group my-4 d-flex justify-content-start">
                     <button
                         type="button"
                         value="post"
                         onClick={() => onFilterClick('post')}
                         className={`btn ${currentFilter === 'post' ? 'btn-primary' : 'btn-outline-primary'}`}
                     >
-                        일반
+                        일반게시글
                     </button>
                     <button
                         type="button"
@@ -99,13 +94,20 @@ const Board = () => {
                         onClick={() => onFilterClick('info')}
                         className={`btn ${currentFilter === 'info' ? 'btn-primary' : 'btn-outline-primary'}`}
                     >
-                        정보
+                        정보게시글
                     </button>
+                </div>
+                <div className="d-flex justify-content-end align-items-center">
+                    {sessionStorage.getItem('memberId') && (
+                        <button onClick={handleWriteButton} className="btn btn-primary my-4">
+                            글쓰기
+                        </button>
+                    )}
                 </div>
             </div>
             <div className="container mx-auto">
                 {notiList && (
-                    <div className="questionList">
+                    <div className="notiList">
                         {notiList.map((postsList) => (
                             <CardComponent key={postsList.contentId} item={postsList} />
                         ))}
@@ -114,14 +116,14 @@ const Board = () => {
             </div>
             <div className="container m-3 p-3 mx-auto">
                 {postsList && (
-                    <div className="questionList">
+                    <div className="postInfoList">
                         {postsList.map((postsList) => (
                             <CardComponent key={postsList.contentId} item={postsList} />
                         ))}
                     </div>
                 )}
             </div>
-            <div className="border-t border-soGray-light">
+            <div className="border-t border-soGray-light container mx-auto d-flex justify-content-center">
                 <div className="mt-12">
                     {pageInfo && (
                         <Pagination
