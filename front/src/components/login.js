@@ -13,6 +13,7 @@ const LoginComponent = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [capsLock, setCapsLock] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [invaild, setInvaild] = useState(false);
@@ -24,6 +25,14 @@ const LoginComponent = () => {
     const handlePassword = (e) => {
         setPassword(e.target.value);
         //console.log("password변화 : "+ password)
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.getModifierState('CapsLock')) {
+            setCapsLock(true);
+        } else {
+            setCapsLock(false);
+        }
     };
 
     const checkEmail = () => {
@@ -103,11 +112,13 @@ const LoginComponent = () => {
                         type="password"
                         value={password}
                         onChange={handlePassword}
+                        onKeyDown={handleKeyPress}
                         id="userPassword"
                         name="userPassword"
                         className="form-control"
                         placeholder="*비밀번호를 입력하세요"
                     ></input>
+                    {capsLock && <span className="text-danger">Caps Lock이 켜져 있습니다.</span>}
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
                     <button type="submit" id="loginBtn" className="btn btn-primary">
