@@ -11,11 +11,11 @@ import MyAnswers from '../components/myanswers';
 const MyPage = () => {
     const [activeComponent, setActiveComponent] = useState('Summary');
     return (
-        <div>
+        <div className="container mx-auto">
             <div>
                 <Profile />
             </div>
-            <Container fluid style={{ height: '100vh', paddingTop: '20px' }}>
+            <div>
                 <Row>
                     <Col style={{ padding: '20px' }}>
                         <Button
@@ -46,7 +46,7 @@ const MyPage = () => {
                         {activeComponent === 'MyAnswers' && <MyAnswers />}
                     </Col>
                 </Row>
-            </Container>
+            </div>
         </div>
     );
 };

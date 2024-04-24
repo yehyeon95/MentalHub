@@ -33,6 +33,7 @@ export const fetchUserLogin = async (data) => {
         .then((res) => {
             if (!res.ok) {
                 if (res.status === 401) console.log('이메일 또는 패스워드가 틀렸습니다.');
+                alert('로그인에 실패했습니다. 아이디와 패스워드를 확인해주세요');
                 throw Error('could not fetch the data for that resource');
             }
             if (res.status === 200) {

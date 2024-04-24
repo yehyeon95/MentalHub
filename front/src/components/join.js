@@ -9,7 +9,8 @@ function JoinComponent() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(false);
     const [userName, setUserName] = useState('');
-
+    const [capsLock, setCapsLock] = useState(false);
+    const [cpasLock2, setCapsLock2] = useState(false);
     const [errorEmail, setErrorEmail] = useState(true);
     const [errorPassword, setErrorPassword] = useState(true);
     const [errorUserName, setErrorUserName] = useState(true);
@@ -19,6 +20,22 @@ function JoinComponent() {
 
     const [emailCheckState, setEmailCheckState] = useState(false);
     const [useNameCheckState, setUserNameCheckState] = useState(false);
+
+    const handleKeyPress = (e) => {
+        if (e.getModifierState('CapsLock')) {
+            setCapsLock(true);
+        } else {
+            setCapsLock(false);
+        }
+    };
+
+    const handleKeyPress2 = (e) => {
+        if (e.getModifierState('CapsLock')) {
+            setCapsLock2(true);
+        } else {
+            setCapsLock2(false);
+        }
+    };
 
     const handleEmail = (e) => {
         setEmail(e.target.value);
@@ -204,11 +221,13 @@ function JoinComponent() {
                     <input
                         type="password"
                         onChange={handlePassword}
+                        onKeyDown={handleKeyPress}
                         id="userPassword"
                         name="userPassword"
                         className="form-control"
                         placeholder="*비밀번호를 입력하세요"
                     ></input>
+                    {capsLock && <span className="text-danger">Caps Lock이 켜져 있습니다.</span>}
                     {errorPassword && (
                         <p className="text-danger">비밀번호는 영어, 숫자, 특수문자가 포함된 8자 이상이어야합니다.</p>
                     )}
@@ -217,11 +236,13 @@ function JoinComponent() {
                     <input
                         type="password"
                         onChange={handlePasswordMatch}
+                        onKeyDown={handleKeyPress2}
                         id="checkedPassword"
                         name="checkedPassword"
                         className="form-control"
                         placeholder="* 비밀번호를 한번 더 입력해주세요"
                     ></input>
+                    {cpasLock2 && <span className="text-danger">Caps Lock이 켜져 있습니다.</span>}
                     {!passwordMatch && <p className="text-danger">비밀번호가 일치하지 않습니다.</p>}
                 </div>
                 <div className="mb-3">
