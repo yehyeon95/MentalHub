@@ -30,6 +30,7 @@ export const fetchUserLogin = async (data) => {
     return fetch(url + '/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json;charset=UTF-8', 'ngrok-skip-browser-warning': '69420' },
+        credentials: 'include',
         body: data,
     })
         .then((res) => {
@@ -107,10 +108,10 @@ export const fetchUserPrePassword = async (data) => {
 };
 
 /**
- * 회원정보수정
+ * 닉네임 수정
  */
-export const fetchUserUpdate = async (data) => {
-    return fetch(url + '/members', {
+export const fetchUserNameUpdate = async (data) => {
+    return fetch(url + '/members/nickname', {
         method: 'PATCH',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -122,16 +123,42 @@ export const fetchUserUpdate = async (data) => {
             if (!res.ok) {
                 throw Error('유효하지 않은 요청입니다.');
             }
-            return res.json();
-        })
-        .then((res) => {
-            if (res.status === 204) {
-                throw Error('회원탈퇴가 완료되었습니다.');
+            if (res.ok) {
+                return res.json();
             }
-            return res.json();
         })
         .then((data) => {
-            return data.data;
+            return data;
+        })
+        .catch((err) => {
+            throw Error(err.message);
+        });
+};
+
+/**
+ * 비밀번호 수정
+ */
+export const fetchUserPasswordUpdate = async (data) => {
+    return fetch(url + '/members/password', {
+        method: 'PATCH',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8',
+            authorization: sessionStorage.getItem('access_token'),
+        },
+        body: data,
+    })
+        .then((res) => {
+            if (!res.ok) {
+                throw Error('유효하지않은 요청입니다.');
+            }
+            if (res.ok) {
+                //console.log('글수정 okay');
+                return res.json();
+            }
+        })
+        .then((data) => {
+            console.log(data);
+            return data;
         })
         .catch((err) => {
             throw Error(err.message);

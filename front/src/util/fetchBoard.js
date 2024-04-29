@@ -1,5 +1,5 @@
 const url = process.env.REACT_APP_Server_IP;
-
+const test = '';
 /**
  * 글쓰기(단일게시물작성)
  */

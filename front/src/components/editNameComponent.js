@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserUpdate } from '../util/fetchUser';
+import { fetchUserNameUpdate } from '../util/fetchUser';
 function EditNameComponent() {
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
@@ -41,11 +41,11 @@ function EditNameComponent() {
             nickname: userName,
         };
 
-        let path = await fetchUserUpdate(JSON.stringify(data)).then((data) => {
+        let path = await fetchUserNameUpdate(JSON.stringify(data)).then((data) => {
             console.log(data);
-            if (data.status === 201) {
+            if (data) {
                 alert('닉네임변경완료');
-                navigate('/login');
+                navigate('/myPage');
             }
         });
     };

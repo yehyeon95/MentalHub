@@ -86,7 +86,10 @@ function WriteComponent() {
 
         let path = await fetchBoardWrite(JSON.stringify(data)).then((data) => {
             //console.log(data);
-            if (data) goHome();
+            if (data) {
+                alert('글쓰기가 성공했습니다.');
+                goHome();
+            }
             // 성공적으로 응답이 오면 게시판 목록으로 이동
         });
     };
