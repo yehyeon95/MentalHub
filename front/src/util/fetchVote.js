@@ -1,8 +1,10 @@
+const url = process.env.REACT_APP_Server_IP;
+
 /**
  * 게시물 추천(좋아요)
  */
 export const fetchUpVote = async (data) => {
-    return fetch('/votes/contents', {
+    return fetch(url + '/votes/contents', {
         method: 'POST',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -27,7 +29,7 @@ export const fetchUpVote = async (data) => {
  * 게시물 추천취소(싫어요)
  */
 export const fetchDownVote = async (data) => {
-    return fetch('/votes/contents', {
+    return fetch(url + '/votes/contents', {
         method: 'DELETE',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -56,7 +58,7 @@ export const fetchDownVote = async (data) => {
  * 댓글 추천(좋아요)
  */
 export const fetchUpVoteComment = async (data) => {
-    return fetch('/votes/comments', {
+    return fetch(url + '/votes/comments', {
         method: 'POST',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -82,7 +84,7 @@ export const fetchUpVoteComment = async (data) => {
  * 댓글 추천취소(싫어요)
  */
 export const fetchDownVoteComment = async (data) => {
-    return fetch('/votes/comments', {
+    return fetch(url + '/votes/comments', {
         method: 'DELETE',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -111,7 +113,7 @@ export const fetchDownVoteComment = async (data) => {
  * 리플 추천(좋아요)
  */
 export const fetchUpVoteReply = async (data) => {
-    return fetch('/votes/replies', {
+    return fetch(url + '/votes/replies', {
         method: 'POST',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -137,7 +139,7 @@ export const fetchUpVoteReply = async (data) => {
  * 댓글 추천취소(싫어요)
  */
 export const fetchDownVoteReply = async (data) => {
-    return fetch('/votes/replies', {
+    return fetch(url + '/votes/replies', {
         method: 'DELETE',
         headers: {
             'content-type': 'application/json;charset=UTF-8',

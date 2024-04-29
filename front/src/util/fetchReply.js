@@ -1,9 +1,11 @@
+const url = process.env.REACT_APP_Server_IP;
+
 /**
  * 리플작성
  */
 
 export const fetchReplyWrite = async (data) => {
-    return fetch('/replies', {
+    return fetch(url + '/replies', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -29,7 +31,7 @@ export const fetchReplyWrite = async (data) => {
  * 리플수정
  */
 export const fetchReplyEdit = async (data, num) => {
-    return fetch(`/replies/${num}`, {
+    return fetch(url + `/replies/${num}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -55,7 +57,7 @@ export const fetchReplyEdit = async (data, num) => {
  */
 
 export const fetchReplyDelete = async (data, num) => {
-    return fetch(`/replies/${num}`, {
+    return fetch(url + `/replies/${num}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',

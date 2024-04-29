@@ -1,9 +1,11 @@
+const url = process.env.REACT_APP_Server_IP;
+
 /**
  * 댓글작성
  */
 
 export const fetchCommentWrite = async (data) => {
-    return fetch('/comments', {
+    return fetch(url + '/comments', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -30,7 +32,7 @@ export const fetchCommentWrite = async (data) => {
  * 댓글수정
  */
 export const fetchCommentEdit = async (data, num) => {
-    return fetch(`/comments/${num}`, {
+    return fetch(url + `/comments/${num}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -56,7 +58,7 @@ export const fetchCommentEdit = async (data, num) => {
  */
 
 export const fetchCommentDelete = async (data, num) => {
-    return fetch(`/comments/${num}`, {
+    return fetch(url + `/comments/${num}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -82,7 +84,7 @@ export const fetchCommentDelete = async (data, num) => {
  */
 
 export const fetchMyComment = async (id) => {
-    return fetch(`/comments/mycomments`, {
+    return fetch(url + `/comments/mycomments`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',

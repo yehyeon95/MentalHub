@@ -1,8 +1,10 @@
+const url = process.env.REACT_APP_Server_IP;
+
 /**
  * 회원가입
  */
 export const fetchUserJoin = async (data) => {
-    return fetch('/members', {
+    return fetch(url + '/members', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         body: data,
@@ -25,7 +27,7 @@ export const fetchUserJoin = async (data) => {
  * 로그인
  */
 export const fetchUserLogin = async (data) => {
-    return fetch('/login', {
+    return fetch(url + '/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json;charset=UTF-8', 'ngrok-skip-browser-warning': '69420' },
         body: data,
@@ -61,7 +63,7 @@ export const fetchUserLogin = async (data) => {
  * 회원탈퇴
  */
 export const fetchUserDelete = async (data) => {
-    return fetch('/members', {
+    return fetch(url + '/members', {
         method: 'DELETE',
         headers: { authorization: sessionStorage.getItem('access_token') },
     })
@@ -81,7 +83,7 @@ export const fetchUserDelete = async (data) => {
  * 사용자확인(기존 비밀번호 확인)
  */
 export const fetchUserPrePassword = async (data) => {
-    return fetch('/members/checkpassword', {
+    return fetch(url + '/members/checkpassword', {
         method: 'POST',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -108,7 +110,7 @@ export const fetchUserPrePassword = async (data) => {
  * 회원정보수정
  */
 export const fetchUserUpdate = async (data) => {
-    return fetch('/members', {
+    return fetch(url + '/members', {
         method: 'PATCH',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -140,8 +142,8 @@ export const fetchUserUpdate = async (data) => {
  * 회원정보조회
  */
 export const fetchUserInfo = async (data) => {
-    console.log('getUserInfo 함수 진입');
-    return fetch('/members/userinfo', {
+    //console.log('getUserInfo 함수 진입');
+    return fetch(url + '/members/userinfo', {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -172,7 +174,7 @@ export const fetchUserInfo = async (data) => {
  * 로그아웃
  */
 export const fetchUserLogOut = async (data) => {
-    return fetch('/member/logout', {
+    return fetch(url + '/member/logout', {
         method: 'DELETE',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -200,7 +202,7 @@ export const fetchUserLogOut = async (data) => {
  */
 
 export const fetchDuplicationEmail = async (data) => {
-    return fetch('/members/duplicate/email', {
+    return fetch(url + '/members/duplicate/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         body: data,
@@ -225,7 +227,7 @@ export const fetchDuplicationEmail = async (data) => {
  */
 
 export const fetchDuplicationNickName = async (data) => {
-    return fetch('/members/duplicate/nickname', {
+    return fetch(url + '/members/duplicate/nickname', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         body: data,

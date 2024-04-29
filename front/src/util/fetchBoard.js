@@ -1,8 +1,10 @@
+const url = process.env.REACT_APP_Server_IP;
+
 /**
  * 글쓰기(단일게시물작성)
  */
 export const fetchBoardWrite = async (data) => {
-    return fetch('/contents', {
+    return fetch(url + '/contents', {
         method: 'POST',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -33,7 +35,7 @@ export const fetchBoardWrite = async (data) => {
  */
 
 export const fetchSinglePost = async (id) => {
-    return fetch(`/contents/${id}`, {
+    return fetch(url + `/contents/${id}`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -62,7 +64,7 @@ export const fetchSinglePost = async (id) => {
  */
 
 export const fetchSinglePostLogin = async (id) => {
-    return fetch(`/contents/${id}/login`, {
+    return fetch(url + `/contents/${id}/login`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -92,15 +94,15 @@ export const fetchSinglePostLogin = async (id) => {
  */
 
 export const fetchPostsList = async (page, filter) => {
-    let url = null;
+    let filterUrl = null;
     if (filter === 'post') {
-        url = `/contents?page=${page}&size=20&type=post`;
+        filterUrl = `/contents?page=${page}&size=20&type=post`;
     } else if (filter === 'info') {
-        url = `/contents?page=${page}&size=20&type=info`;
+        filterUrl = `/contents?page=${page}&size=20&type=info`;
     } else if (filter === 'notice') {
-        url = `/contents?page=${page}&size=20&type=notice`;
+        filterUrl = `/contents?page=${page}&size=20&type=notice`;
     }
-    return fetch(url, {
+    return fetch(url + filterUrl, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -127,7 +129,7 @@ export const fetchPostsList = async (page, filter) => {
  */
 
 export const fetchPostsNotiList = async (page) => {
-    return fetch(`/contents?page=1&size=20&type=notice`, {
+    return fetch(url + `/contents?page=1&size=20&type=notice`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -154,7 +156,7 @@ export const fetchPostsNotiList = async (page) => {
  */
 
 export const fetchPostUpdate = async (contentId, data) => {
-    return fetch(`/contents/${contentId}`, {
+    return fetch(url + `/contents/${contentId}`, {
         method: 'PATCH',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -185,7 +187,7 @@ export const fetchPostUpdate = async (contentId, data) => {
  */
 
 export const fetchPostDelete = async (contentId) => {
-    return fetch(`/contents/${contentId}`, {
+    return fetch(url + `/contents/${contentId}`, {
         method: 'DELETE',
         headers: { authorization: sessionStorage.getItem('access_token') },
     })
@@ -208,10 +210,10 @@ export const fetchPostDelete = async (contentId) => {
  */
 
 export const fetchSearch = async (searchText, searchType) => {
-    console.log('여기까지오는지 확인');
-    console.log(searchText);
-    console.log(searchType);
-    let url = '';
+    // console.log('여기까지오는지 확인');
+    // console.log(searchText);
+    // console.log(searchType);
+    let searchUrl = '';
     let id = 0;
     if (sessionStorage.getItem('memberId')) {
         id = sessionStorage.getItem('memberId');
@@ -220,16 +222,16 @@ export const fetchSearch = async (searchText, searchType) => {
         // 굳이 없어도 될것같기는한데 추가
     }
     if (searchType === '제목') {
-        url = `contents/search?keyword=${searchText}&searchType=title&memberId=${id}`;
+        searchUrl = `/contents/search?keyword=${searchText}&searchType=title&memberId=${id}`;
         console.log('title', url);
     } else if (searchType === '제목+닉네임') {
-        url = `contents/search?keyword=${searchText}&searchType=titleAndBody&memberId=${id}`;
+        searchUrl = `/contents/search?keyword=${searchText}&searchType=titleAndBody&memberId=${id}`;
         console.log('titleAndBody', url);
     } else if (searchType === '닉네임') {
-        url = `contents/search?keyword=${searchText}&searchType=nickname&memberId=${id}`;
+        searchUrl = `/contents/search?keyword=${searchText}&searchType=nickname&memberId=${id}`;
         console.log('nickname', url);
     }
-    return fetch(url, {
+    return fetch(url + searchUrl, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -259,7 +261,7 @@ export const fetchSearch = async (searchText, searchType) => {
  */
 
 export const fetchMyPost = async (id) => {
-    return fetch(`/contents/mycontents`, {
+    return fetch(url + `/contents/mycontents`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',
@@ -289,7 +291,7 @@ export const fetchMyPost = async (id) => {
  */
 
 export const fetchMySummary = async (id) => {
-    return fetch(`/members/mypage/summary`, {
+    return fetch(url + `/members/mypage/summary`, {
         method: 'GET',
         headers: {
             'content-type': 'application/json;charset=UTF-8',

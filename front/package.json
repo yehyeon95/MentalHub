@@ -42,6 +42,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "proxy": "https://7b08-121-187-22-110.ngrok-free.app"
+    }
 }
